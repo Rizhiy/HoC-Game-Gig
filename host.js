@@ -59,8 +59,10 @@ class Game {
 
     this.engine = Matter.Engine.create()
 
-      var ground = Matter.Bodies.rectangle(400, 610, 2000, 60, { isStatic: true })
-      Matter.World.add(this.engine.world,[ground]);
+      var ground = Matter.Bodies.rectangle(0, 1000, 4000, 100, { isStatic: true })
+      var right = Matter.Bodies.rectangle(-2000,0,100,2000,{isStatic:true})
+      var left = Matter.Bodies.rectangle(2000,0,100,2000,{isStatic:true})
+      Matter.World.add(this.engine.world,[ground,right,left]);
   }
 
 

@@ -57,10 +57,12 @@ function loadEmoji(cb) {
 }
 
 window.addEventListener("load", () => {
-  let conn = new Connection()
-  conn.opened = () => {
-    loadEmoji(emoji => main(conn, emoji))
-  }
+	loadEmoji(emoji => {
+		let conn = new Connection()
+		conn.opened = () => {
+			main(conn, emoji)
+		}
+	});
 })
 
 
