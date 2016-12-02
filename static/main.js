@@ -31,25 +31,27 @@ class Connection {
 }
 
 
+var emoji
 function loadEmoji(cb) {
     var xhr = new XMLHttpRequest();
-    
+
     xhr.responseType = "arraybuffer";
-    
+
     xhr.addEventListener("load", function(){
         var arrayBufferView = new Uint8Array( this.response );
         var blob = new Blob( [ arrayBufferView ], { type: "image/png" } );
         var urlCreator = window.URL || window.webkitURL;
         var imageUrl = urlCreator.createObjectURL( blob );
-        
+
+        emoji = imageUrl
         cb(imageUrl);
     });
-    
+
     xhr.addEventListener("progress", function(p){
         var el = document.getElementById("loadingbar")
         el.style.width = (100 * p.loaded / p.total) + "%";
     });
-    
+
     xhr.open("GET", "emoji.png");
     xhr.send();
 }
@@ -61,30 +63,61 @@ window.addEventListener("load", () => {
   }
 })
 
-function createEmoji(emoji, name){
-	var pos = emojiNames.indexOf(name);
-	var x = pos % 32;
-	var y = Math.floor(pos / 32);
-	
-    var img = document.createElement("div");
-    img.style.width = "72px";
-    img.style.height = "72px";
-    img.style.background = "url(" + emoji + ")";
-    img.style.backgroundPosition = "-" + (72*x) + "px -" + (72*y) + "px";
-    img.style.backgroundSize = "2304px 2304px";
-    
-    document.body.appendChild(img);
+
+let images = {}
+
+function createDiv() {
+  var img = document.createElement("div");
+  img.style.width = "72px";
+  img.style.height = "72px";
+  img.style.background = "url(" + emoji + ")";
+  return img
 }
+
+function setEmoji(image, name) {
+  var pos = emojiNames.indexOf(name);
+  var x = pos % 32;
+  var y = Math.floor(pos / 32);
+
+  img.style.backgroundPosition = "-" + (72*x) + "px -" + (72*y) + "px";
+  img.style.backgroundSize = "2304px 2304px";
+
+  document.body.appendChild(img);
+}
+
+function render(entities) {
+  let byId = {}
+  for (var i=0; i<entities.length; i++) {
+    let entity = entities[i]
+    byId[entity.id] = entity
+  }
+
+  for (let id in byId) {
+    var entity = entities[id]
+    var image = images[id]
+    if (!image) {
+      images[id] = image = createDiv()
+    }
+    setEmoji(image, entity.name)
+    image.transform = `translate({entity.x}px {entity.y}px) scale({entity.scale})`
+  }
+
+  // TODO remove dead entities
+}
+
 
 function main(conn, emoji) {
   window.conn = conn
 
-  conn.on(message => {
-    console.log(message)
+  conn.on(json => {
+    switch (json.type) {
+      case 'world':
+        render(json.entities)
+        break
+    }
   })
 
   conn.send({ type: 'spawn', name: 'pile of poo' })
-  
-  createEmoji(emoji, 'pile of poo');
 
 }
+
