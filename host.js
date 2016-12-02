@@ -145,10 +145,8 @@ class Game {
   handle_code(id, json) {
     let player = this.players[id]
     let scripts = json.json
-    let code = scripts[0]
-    console.log(JSON.stringify(code))
 
-    player.run(code, true)
+    player.run(scripts, true)
   }
 
   handle_mouseMove(id, json) {
@@ -162,7 +160,7 @@ class Game {
     let code = player.onKey[json.keyCode]
     console.log(code)
     if (code) {
-      player.run(code)
+      player.run([code])
     }
   }
   

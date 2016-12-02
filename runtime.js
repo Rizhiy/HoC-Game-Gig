@@ -318,23 +318,25 @@ class Thread {
 }
 
 
-function evaluateInteractive(blocks, ctx, interactive) {
-  if (!blocks) return
-  var first = blocks[0]
-  if (!first) return
+function evaluateInteractive(scripts, ctx, interactive) {
+  scripts.forEach(blocks => {
+    if (!blocks) return
+    var first = blocks[0]
+    if (!first) return
 
-  if (interactive) {
-    switch (first[0]) {
-      case 'whenKeyPressed': // bind key
-        ctx.player.onKey[getKeyCode(first[1])] = blocks
-        return
+    if (interactive) {
+      switch (first[0]) {
+        case 'whenKeyPressed': // bind key
+          ctx.player.onKey[getKeyCode(first[1])] = blocks
+          return
+      }
     }
-  }
 
-  var thread = new Thread(blocks, ctx)
-  if (thread.step()) {
-    ctx.entity.threads.push(thread)
-  }
+    var thread = new Thread(blocks, ctx)
+    if (thread.step()) {
+      ctx.entity.threads.push(thread)
+    }
+  })
 }
 
 function tickEntity(entity) {
@@ -365,7 +367,7 @@ var KEY_CODES = {
   'up arrow': 38,
   'right arrow': 39,
   'down arrow': 40,
-  'any': 128
+  'any': 128,
 };
 
 var getKeyCode = function(keyName) {
