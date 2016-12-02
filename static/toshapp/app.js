@@ -79,7 +79,6 @@ var ScriptsEditor = function() {
 
   this.cm.on('change', this.onChange.bind(this));
 
-  this.cm.save = submit
   this.cmUndo = this.cm.undo.bind(this.cm);
   this.cmRedo = this.cm.redo.bind(this.cm);
 };
@@ -733,6 +732,7 @@ editor.cm.on('keydown', (cm, e) => {
     if (!scripts) {
       return
     }
+    console.log(scripts)
     if (!scripts || !scripts.length) return
 
     conn.send({
