@@ -68,6 +68,7 @@ var Scratch = (function() {
 
     // events
     ["when I press %m.key",				    "h", 5, "whenKeyPressed", 		"space"],
+    ["when I click",				        "h", 5, "whenClick"],
     // TODO when touching <other entity>...
     ["with %m.spriteOnly",				"c", 6, "with:", "myself"],
 

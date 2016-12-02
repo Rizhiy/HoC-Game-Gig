@@ -329,6 +329,9 @@ function evaluateInteractive(scripts, ctx, interactive) {
         case 'whenKeyPressed': // bind key
           ctx.player.onKey[getKeyCode(first[1])] = blocks
           return
+        case 'whenClick': // bind mouse click
+          ctx.player.onClick = blocks
+          return
       }
     }
 

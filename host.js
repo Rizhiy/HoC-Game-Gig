@@ -12,6 +12,7 @@ class Player {
     this.send = send
 
     this.onKey = {}
+    this.onClick = null
   }
 
   place(name, x = 0, y = 0) {
@@ -165,8 +166,12 @@ class Game {
   }
 
   handle_mouseClick(id,json){
-    let player = this.players[id];
-    console.log(id + " has pressed the mouse button");
+    let player = this.players[id]
+    let code = player.onClick
+    console.log(code)
+    if (code) {
+      player.run([code])
+    }
   }
   
 
@@ -233,7 +238,6 @@ class Game {
   spawn(name, x, y) {
     let entity = new Entity(name, x, y)
     this.add(entity)
-    console.log(entity)
     return entity
   }
 
