@@ -54,7 +54,11 @@ var server = http.createServer(function(request, response) {
       }
     }
     else {
-      response.writeHead(200, { 'Content-Type': contentType, 'Content-Length': content.length })
+      response.writeHead(200, {
+        'Content-Type': contentType,
+        'Content-Length': content.length,
+        'Cache-Control': 'max-age=31536000',
+      })
       response.end(content, 'utf-8')
     }
   })
