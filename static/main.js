@@ -70,6 +70,7 @@ function createDiv() {
   return img
 }
 
+
 function addGround(){
     var ground = document.createElement("div");
     ground.style.width = "4000px";
@@ -121,7 +122,7 @@ function setEmoji(img, name) {
 
   img.style.backgroundPosition = "-" + (72*x) + "px -" + (72*y) + "px";
   img.style.backgroundSize = "2304px 2304px";
-
+  
   document.querySelector(".world").appendChild(img);
 }
 
@@ -137,6 +138,19 @@ function render(entities) {
     var image = images[id]
     if (!image) {
       images[id] = image = createDiv()
+		
+	  // Add wand
+	  var wand = createDiv()
+	  wand.className = 'wand'
+	  wand.style.transform = `rotate(90deg) translate(0px, -36px) scale(0.5)`
+  
+	  var wand_pos = emojiNames.indexOf('soft ice cream')
+	  var wand_x = wand_pos % 32;
+	  var wand_y = Math.floor(wand_pos / 32);
+	  wand.style.backgroundPosition = "-" + (72*wand_x) + "px -" + (72*wand_y) + "px";
+	  wand.style.backgroundSize = "2304px 2304px";
+
+	  image.appendChild(wand);
     }
     setEmoji(image, entity.name)
     image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
@@ -148,7 +162,7 @@ function render(entities) {
 
   let player = byId[playerid]
   if (player) {
-    console.log(player)
+    //console.log(player)
     var w = container.offsetWidth
     var h = container.offsetHeight
     var cx = -player.x + w/2
@@ -203,6 +217,34 @@ function sendKey(e){
     window.conn.send({type:'keydown',keyCode: e.keyCode})
 }
 window.addEventListener("keydown",sendKey);
+
+// Mouse event handler
+function onWorldMouse(e){
+	
+	var mouse_x = e.clientX
+	var mouse_y = e.clientY
+	
+	var wands = document.getElementsByClassName('wand')
+
+	// For each wand point it at mouse loc
+	for (let wand_idx in wands) {
+		var rect = wands[wand_idx].parentElement.getBoundingClientRect();
+		wand_x = (rect.right + rect.left)/2
+		wand_y = (rect.top+rect.bottom)/2
+
+		var angle = 90.0+(Math.atan2(y-wand_y,x-wand_x)*(180.0/Math.PI));
+
+		parent_transform = wands[wand_idx].parentElement.style.transform;
+		parent_rotation = parent_transform.match(/\.*rotate\(([\-0-9]+.[0-9]+)deg\)/)
+		parent_rotation = parent_rotation ? parseFloat(parent_rotation[1]) : 0;
+		new_angle = angle-parent_rotation;
+		new_x = 36*Math.sin(new_angle*(Math.PI/180.0));
+		new_y = -36*Math.cos(new_angle*(Math.PI/180.0));
+		
+		wands[wand_idx].style.transform = `translate(${new_x}px, ${new_y}px) scale(0.5) rotate(${new_angle}deg)`
+	}
+}
+document.querySelector(".world").addEventListener("mousemove",onWorldMouse);
 
 window.addEventListener("load", () => {
        loadEmoji(emoji => {
