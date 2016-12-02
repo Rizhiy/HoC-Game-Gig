@@ -53,10 +53,15 @@ function evaluate(thing, ctx) {
       Matter.Body.setMass(body, mass)
       break
       
-      case 'setRestitution'
+      case 'setRestitution':
           var [rest] = args
           body.restitution = rest
           break
+      
+      case 'setFriction':
+        var [fric] = args
+        body.friction = fric
+        break
 
     case 'setOpacity':
       body.render.opacity = args[0] / 100
@@ -240,6 +245,7 @@ function value(thing, ctx) {
     case 'getY': return ctx.entity.body.position.y
     case 'getMass': return ctx.entity.body.mass
     case 'getRestitution': return ctx.entity.body.restitution
+    case 'getFriction': return ctx.entity.body.friction
     
     case "mouseX": return ctx.mouseX
     case "mouseY": return ctx.mouseY
