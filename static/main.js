@@ -100,12 +100,15 @@ function render(entities) {
       images[id] = image = createDiv()
     }
     setEmoji(image, entity.name)
-    image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale})`
+    image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
   }
 
   // TODO remove dead entities
 }
 
+function choose(options) {
+  return options[Math.floor(Math.random() * options.length)]
+}
 
 function main(conn, emoji) {
   window.conn = conn
@@ -118,7 +121,7 @@ function main(conn, emoji) {
     }
   })
 
-  conn.send({ type: 'spawn', name: 'pile of poo' })
+  conn.send({ type: 'spawn', name: choose(emojiNames) })
 
 
 }

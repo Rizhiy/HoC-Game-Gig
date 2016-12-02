@@ -116,7 +116,7 @@ wsServer.on('request', function(request) {
 })
 
 
-let fps = 40
+let fps = 25
 setInterval(() => {
   game.tick(fps)
 }, 1000 / fps)

@@ -9,9 +9,8 @@ class Player {
     this.send = send
   }
 
-  place(json) {
-    let { emoji } = json
-    this.entity = new Entity(emoji, 0, 0)
+  place(name, x = 0, y = 0) {
+    this.entity = new Entity(name, x, y)
     this.game.add(this.entity)
   }
 
@@ -22,7 +21,7 @@ class Player {
 
 
 class Entity {
-  constructor(name = '', x = 0, y = 0, rot = 0, scale = 1, opacity = 1, mass = 1) {
+  constructor(name, x = 0, y = 0, rot = 0, scale = 1, opacity = 1, mass = 1) {
     this.id = ++Entity.highestId
     this.name = name
     this.x = x
@@ -60,7 +59,7 @@ class Game {
 
     this.engine = Matter.Engine.create()
 
-      var ground = Matter.Bodies.rectangle(400, 610, 810, 60, { isStatic: true })
+      var ground = Matter.Bodies.rectangle(400, 610, 2000, 60, { isStatic: true })
       Matter.World.add(this.engine.world,[ground]);
   }
 
@@ -131,6 +130,7 @@ class Game {
       let entity = entities[i]
       entity.x = entity.body.position.x
       entity.y = entity.body.position.y
+      entity.rot = 180 / Math.PI * entity.body.angle
     }
 
     this.stream()
