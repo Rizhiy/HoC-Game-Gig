@@ -36,12 +36,19 @@ strong {
 }
 
 #loadingcontainer{
+    width: 100%;
+    height: 100%;
+}
+
+#barvcenter{
+    top: 50%;
+    transform: translate(0px, -50%);
     width: 50%;
-    background: #999;
+    left: 25%;
+    position: absolute;
 }
 
 #loadingtext {
-    color: white;
     font-weight: bold;
     text-align: center;
     font-size: 3em;
@@ -49,10 +56,18 @@ strong {
     display: block;
 }
 
+#loadingbarback {
+    background: #999;
+}
+
 #loadingbar {
     background: #09f;
     height:20px;
-    width: 0%;
+    width: 1%;
+}
+
+.editor{
+    visibility: hidden;
 }
 
 .world{
