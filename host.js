@@ -152,8 +152,8 @@ class Game {
 
   handle_mouseMove(id, json) {
       let player = this.players[id]
-      player.mouseX = json.position.x
-      player.mouseY = json.position.y
+      player.mouseX = json.position.x - Game.WIDTH/2
+      player.mouseY = json.position.y - Game.HEIGHT/2
   }
 
   handle_keydown(id, json) {
