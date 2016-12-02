@@ -1,0 +1,17 @@
+{
+  "name": "hoc",
+  "version": "0.1",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/Rizhiy/HoC-Game-GIg",
+    "type": "git"
+  },
+  "author": "tjvr <tim@tjvr.org>",
+  "license": "MIT",
+  "dependencies": {
+    "http-server": "^0.9.0"
+  },
+  "scripts": {
+    "start": "http-server static"
+  }
+}
