@@ -337,7 +337,9 @@ class Thread {
           ctx = Object.assign({}, ctx, {
             entity: value(args[0], ctx),
           })
-          stack.push(new Frame(args[1], ctx))
+          let subThread = new Thread(args[1], ctx)
+          subThread.step()
+          ctx.entity.threads.push(subThread)
           frame.index++
           break
         case 'doIf':
