@@ -85,7 +85,7 @@ function addSky(){
     var sky = document.createElement("div");
     sky.style.width = "4000px";
     sky.style.height = "100px";
-    sky.style.backskyColor = "blue";
+    sky.style.backgroundColor = "blue";
     sky.style.position = "absolute";
     sky.style.top = "0px";
     sky.style.left = "0px";
