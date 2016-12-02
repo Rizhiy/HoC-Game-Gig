@@ -45,6 +45,7 @@ class Entity {
   }
 }
 Entity.highestId = 0
+Entity.RADIUS = 36
 
 
 
@@ -99,7 +100,8 @@ class Game {
     this.entities.push(entity)
     this.entitiesById[entity.id] = entity
 
-    // TODO add body to Matter.js
+    entity.body = Matter.Bodies.circle(entity.x, entity.y, Entity.RADIUS)
+    this.engine.world.add([entity.body])
   }
 
   remove(entityId) {
@@ -108,6 +110,8 @@ class Game {
     let index = this.entities.indexOf(entity)
     if (index === -1) throw 'already removed'
     this.entities.splice(index, 1)
+    
+    // TODO remove Matter.js entity
   }
 
 
