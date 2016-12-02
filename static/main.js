@@ -193,6 +193,7 @@ function updateWand(eid){
     
     // Update transformation
     wand.style.transform = `translate(${new_x}px, ${new_y}px) scale(0.5) rotate(${new_angle}deg)`
+    wand.style.visibility = "visible"
 }
 
 let byId = {}
@@ -232,6 +233,7 @@ function render(entities) {
 	  var wand_y = Math.floor(wand_pos / 32);
 	  wand.style.backgroundPosition = "-" + (72*wand_x) + "px -" + (72*wand_y) + "px";
 	  wand.style.backgroundSize = "2304px 2304px";
+      wand.style.visibility = "hidden"
       
       wands[id] = wand
 
