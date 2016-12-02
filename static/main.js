@@ -57,12 +57,10 @@ function loadEmoji(cb) {
 }
 
 window.addEventListener("load", () => {
-	loadEmoji(emoji => {
-		let conn = new Connection()
-		conn.opened = () => {
-			main(conn, emoji)
-		}
-	});
+  let conn = new Connection()
+  conn.opened = () => {
+    loadEmoji(emoji => main(conn, emoji))
+  }
 })
 
 
@@ -77,6 +75,16 @@ function createDiv() {
   return img
 }
 
+function createContainerDiv() {
+	var container = document.createElement("div");
+	container.style.width = "800px";
+	container.style.height = "400px";
+	return container
+}
+
+var container = createContainerDiv()
+document.body.appendChild(container)
+
 function setEmoji(img, name) {
   var pos = emojiNames.indexOf(name);
   var x = pos % 32;
@@ -85,7 +93,7 @@ function setEmoji(img, name) {
   img.style.backgroundPosition = "-" + (72*x) + "px -" + (72*y) + "px";
   img.style.backgroundSize = "2304px 2304px";
 
-  document.body.appendChild(img);
+  container.appendChild(img);
 }
 
 function render(entities) {
@@ -105,6 +113,7 @@ function render(entities) {
     image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
   }
 
+  
   // TODO remove dead entities
 }
 
@@ -124,7 +133,5 @@ function main(conn, emoji) {
   })
 
   conn.send({ type: 'spawn', name: choose(emojiNames) })
-
-
 }
 
