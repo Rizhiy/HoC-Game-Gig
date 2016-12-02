@@ -101,7 +101,7 @@ class Game {
     this.entitiesById[entity.id] = entity
 
     entity.body = Matter.Bodies.circle(entity.x, entity.y, Entity.RADIUS)
-    this.engine.world.add([entity.body])
+    Matter.World.addBody(this.engine.world, entity.body)
   }
 
   remove(entityId) {
@@ -110,7 +110,7 @@ class Game {
     let index = this.entities.indexOf(entity)
     if (index === -1) throw 'already removed'
     this.entities.splice(index, 1)
-    
+
     // TODO remove Matter.js entity
   }
 
@@ -119,9 +119,28 @@ class Game {
 
   tick(fps) {
     // TODO sync entity values to/from Matter.js ???
-      game.engine.update(1000/fps)
+    Matter.Engine.update(this.engine, 1000/fps)
+
+    let entities = this.entities
+    for (var i=entities.length; i--; ) {
+      let entity = entities[i]
+      entity.x = entity.body.position.x
+      entity.y = entity.body.position.y
+    }
+
+    this.stream()
   }
-  
+
+  // send world to clients
+  stream() {
+    let entities = this.entities
+    let out = []
+    for (var i=entities.length; i--; ) {
+      out.push(entities[i].toJSON())
+    }
+    this.broadcast({ type: 'world', entities: out })
+  }
+
 }
 
 
