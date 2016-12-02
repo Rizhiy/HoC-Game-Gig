@@ -387,8 +387,8 @@
       }
 
       // can't parse so give up
-      if (this.columns.length < this.index + 1) {
-        return { index: this.columns.length }
+      if (this.columns.length < this.index) {
+        return { index: this.columns.length, gave_up: 'yes' }
       }
 
       // recalc columns, up to end of newTokens
@@ -436,7 +436,7 @@
 
       let canScan = column.scan(token, previous)
       if (!canScan) {
-        return { error: 'Unexpected ' + token, index: this.index + 1, type: 'cant-scan', column: column }
+        return { error: 'Unexpected ' + token, index: this.index + 1, type: 'cant-scan', column: previous }
       }
 
       column.process()
@@ -673,17 +673,17 @@
         }
       }
 
-      console.table(completions.map(function(s) {
-        return {
-          target: s.rule.target,
-          start: s.start,
-          pre: s.pre.map(x => x.toString()).join(" "),
-          completion: s.completion.map(x => x.toString()).join(" "),
-          post: s.post.map(x => x.toString()).join(" "),
-          end: s.end,
-          build: s.rule.build,
-        }
-      }))
+      // console.table(completions.map(function(s) {
+      //   return {
+      //     target: s.rule.target,
+      //     start: s.start,
+      //     pre: s.pre.map(x => x.toString()).join(" "),
+      //     completion: s.completion.map(x => x.toString()).join(" "),
+      //     post: s.post.map(x => x.toString()).join(" "),
+      //     end: s.end,
+      //     build: s.rule.build,
+      //   }
+      // }))
 
       return completions
     }
