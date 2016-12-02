@@ -286,14 +286,14 @@ function onWorldMouse(e){
 	
 	// Get 'wand' div elements
 	var wands = document.getElementsByClassName('wand')
-	console.log(wands)
+	//console.log(wands)
 
 	// For each wand point it at mouse loc
 	for (var wand_idx=0; wand_idx < wands.length; wand_idx++) {
 		//console.log(wands.length)
-		console.log(wands[wand_idx])
-		console.log(typeof(wands[wand_idx]))
-		console.log(wands[wand_idx].parentNode)
+		//console.log(wands[wand_idx])
+		//console.log(typeof(wands[wand_idx]))
+		//console.log(wands[wand_idx].parentNode)
 		var rect = wands[wand_idx].parentElement.getBoundingClientRect();
 		wand_x = (rect.right + rect.left)/2
 		wand_y = (rect.top + rect.bottom)/2
