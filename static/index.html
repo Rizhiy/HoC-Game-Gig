@@ -1,12 +1,24 @@
 <!doctype html>
 <meta charset=utf-8>
+<meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>emoji wizard</title>
 
-<body>
-<div id="loadingcontainer" style="width:50%; height:20px">
-	<div id="loadingbar" style="background: #f00; height:100%; width:0%"></div>
+<link rel=stylesheet href=/node_modules/codemirror/lib/codemirror.css>
+<link rel=stylesheet href=/node_modules/codemirror/addon/hint/show-hint.css>
+<link rel=stylesheet href=style.css>
+
+<div id="loadingcontainer" style="width:50%; height:20px; background: #999">
+	<div id="loadingbar" style="background: #09f; height:100%; width:0%"></div>
 </div>
+<div class=container><div class=world></div></div>
+<div class=editor></div>
 
 <script src=emoji-list.js></script>
+<script src=/node_modules/codemirror/lib/codemirror.js></script>
+<script src=/node_modules/codemirror/addon/hint/show-hint.js></script>
+<script src=lately/lately.js></script>
+<script src=lately/mode.js></script>
+<script src=lately/bnf.js></script>
+<script src=lately/demo.js></script>
 <script src=main.js></script>
 

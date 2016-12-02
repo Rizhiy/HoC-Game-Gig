@@ -1,6 +1,9 @@
 
 const Matter = require('matter-js/build/matter.js')
 
+//const runtime = require('./runtime')
+
+
 
 class Player {
   constructor(game, id, send) {
@@ -21,27 +24,24 @@ class Player {
 
 
 class Entity {
-  constructor(name, x = 0, y = 0, rot = 0, scale = 1, opacity = 1, mass = 1) {
-    this.id = ++Entity.highestId
+  constructor(name, x = 0, y = 0) {
     this.name = name
-    this.x = x
-    this.y = y
-    this.rot = rot
-    this.scale = scale
-    this.opacity = opacity
-    this.mass = mass
+    this.body = Matter.Bodies.circle(x, y, Entity.RADIUS)
+    this.id = this.body.id
   }
 
   toJSON() {
+    let body = this.body
+    let render = body.render
     return {
       id: this.id,
       name: this.name,
-      x: this.x,
-      y: this.y,
-      rot: this.rot,
-      scale: this.scale,
-      opacity: this.opacity,
-      mass: this.mass,
+      x: body.position.x + Game.WIDTH/2,
+      y: body.position.y + Game.HEIGHT/2,
+      rot: 180 / Math.PI * body.angle,
+      scale: render.sprite.xScale,
+      opacity: render.opacity,
+      visible: render.visible,
     }
   }
 }
@@ -57,12 +57,12 @@ class Game {
     this.entities = []
     this.entitiesById = {}
 
-    this.engine = Matter.Engine.create()
-
-      var ground = Matter.Bodies.rectangle(0, 1000, 4000, 100, { isStatic: true })
-      var right = Matter.Bodies.rectangle(-2000,0,100,2000,{isStatic:true})
-      var left = Matter.Bodies.rectangle(2000,0,100,2000,{isStatic:true})
-      Matter.World.add(this.engine.world,[ground,right,left]);
+    this.engine = Matter.Engine.create();
+      var sky = Matter.Bodies.rectangle(0,-Game.HEIGHT/2,Game.WIDTH,100,{isStatic:true})
+      var ground = Matter.Bodies.rectangle(0, Game.HEIGHT/2, Game.WIDTH, 100, { isStatic: true })
+      var right = Matter.Bodies.rectangle(Game.WIDTH/2,0,100,Game.HEIGHT,{isStatic:true})
+      var left = Matter.Bodies.rectangle(-Game.WIDTH/2,0,100,Game.HEIGHT,{isStatic:true})
+      Matter.World.add(this.engine.world,[sky,ground,right,left]);
   }
 
 
@@ -106,7 +106,6 @@ class Game {
     this.entities.push(entity)
     this.entitiesById[entity.id] = entity
 
-    entity.body = Matter.Bodies.circle(entity.x, entity.y, Entity.RADIUS)
     Matter.World.addBody(this.engine.world, entity.body)
   }
 
@@ -127,14 +126,6 @@ class Game {
     // TODO sync entity values to/from Matter.js ???
     Matter.Engine.update(this.engine, 1000/fps)
 
-    let entities = this.entities
-    for (var i=entities.length; i--; ) {
-      let entity = entities[i]
-      entity.x = entity.body.position.x
-      entity.y = entity.body.position.y
-      entity.rot = 180 / Math.PI * entity.body.angle
-    }
-
     this.stream()
   }
 
@@ -149,9 +140,12 @@ class Game {
   }
 
 }
+Game.WIDTH = 4000;
+Game.HEIGHT = 2000;
 
 
 
 module.exports = {
   Game,
 }
+

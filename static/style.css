@@ -1,0 +1,224 @@
+body, div, p, textarea, pre, ul, ol, li, blockquote, hr,
+table, tbody, thead, tr, td, th,
+h1, h2, h3, h4, h5, a, button, input {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  list-style: none;
+  text-decoration: none;
+}
+
+* {
+  line-height: 1.25;
+}
+
+a {
+  white-space: normal;
+  cursor: pointer;
+}
+
+body {
+  font-family: -apple-system, Helvetica Neue, Lucida Grande, sans-serif;
+  font-size: 1rem;
+  background: #fff;
+  color: #000;
+  font-size: 16px;
+}
+
+strong {
+  font-weight: 700;
+}
+
+.right {
+  float: right;
+}
+
+.world{
+	height: 4000px;
+	width: 2000px;
+}
+
+/*****************************************************************************/
+
+body {
+  min-width: 500px; /* MIN_WIDTH */
+   /* MIN_HEIGHT */
+  line-height: 1.5em;
+  font-size: 12px;
+  background: #ececec;
+  overflow: auto;
+  height: 100%;
+  max-height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.wrap {
+  position: absolute;
+  top: 32px;
+  bottom: 8px; left: 8px; right: 8px;
+}
+.show-debug .wrap {
+  bottom: 70%;
+}
+
+/*****************************************************************************/
+/* menu */
+
+.title {
+  font-size: 20px;
+  font-weight: 300;
+  padding: 4px 8px;
+  display: inline-block;
+}
+
+.menu-button {
+  display: inline-block;
+  cursor: pointer;
+  padding: 4px 4px 2px;
+}
+.menu-button:hover {
+  text-decoration: underline;
+}
+
+/*****************************************************************************/
+/* tabs */
+
+.tabs {
+  border-bottom: 1px solid #999;
+  line-height: 24px;
+  height: 24px;
+}
+
+.tab {
+  position: relative;
+  text-transform: capitalize;
+  cursor: pointer;
+  display: inline-block;
+  border: 1px solid transparent;
+  border-bottom-color: #999;
+  background: #f7f7f7; /* cf. CodeMirror-gutters */
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  vertical-align: top;
+  height: 24px;
+  min-width: 50px;
+  text-align: center;
+}
+.tab-active, .tab:hover {
+  border-color: #999;
+}
+.tab-active, .tab-active:hover {
+  background: #fff;
+  z-index: 1;
+
+  border-bottom-color: transparent;
+}
+
+.tab span {
+  padding: 0 8px;
+  position: relative;
+  top: -1px;
+}
+
+/*****************************************************************************/
+/* panes */
+
+.pane {
+  position: absolute;
+  top: 23px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: #fff;
+  border: 1px solid #999;
+
+  padding: 4px;
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  display: none;
+}
+.pane-active {
+  display: block;
+}
+
+.pane h2 {
+  position: static;
+  font-size: 1em;
+  font-weight: 700;
+  padding: 0;
+  text-align: left;
+}
+
+/*****************************************************************************/
+/* code editor */
+
+.container {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  bottom: 256px;
+  background: red;
+  overflow: hidden;
+}
+
+.editor {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 256px;
+  z-index: 200;
+
+  color: rgba(0, 0, 0, 0.8);
+  background: #fff; /* prevents flickering */
+
+  overflow: hidden;
+}
+
+.CodeMirror-cursors {
+  visibility: hidden !important;
+}
+.CodeMirror-focused .CodeMirror-cursors {
+  visibility: visible !important;
+}
+.CodeMirror-code:focus {
+    outline: none;
+}
+
+.CodeMirror, .CodeMirror-hint {
+  font-family: Noto Sans, sans-serif;
+  letter-spacing: +0.5px;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.CodeMirror-linenumber {
+  font-family: Source Code Pro, monospace;
+  font-size: 12px;
+  /*min-width: 18px;*/
+}
+
+.CodeMirror-gutters {
+  border-right: 1px solid #999;
+}
+
+.CodeMirror-hints {
+  max-height: 400px;
+}
+.CodeMirror-hints .text {
+  font-family: "Lucida Grande", Verdana, Arial, "DejaVu Sans", sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 0.125em 0.25em;
+}
+.CodeMirror-hints .empty {
+  height: 6px;
+  display: block;
+}
+

@@ -38,6 +38,9 @@ function loadEmoji(cb) {
     xhr.responseType = "arraybuffer";
 
     xhr.addEventListener("load", function(){
+		// Remove progress bar
+		document.getElementById("loadingcontainer").remove();
+
         var arrayBufferView = new Uint8Array( this.response );
         var blob = new Blob( [ arrayBufferView ], { type: "image/png" } );
         var urlCreator = window.URL || window.webkitURL;
@@ -75,15 +78,6 @@ function createDiv() {
   return img
 }
 
-function createContainerDiv() {
-	var container = document.createElement("div");
-	container.style.width = "800px";
-	container.style.height = "400px";
-	return container
-}
-
-var container = createContainerDiv()
-document.body.appendChild(container)
 
 function setEmoji(img, name) {
   var pos = emojiNames.indexOf(name);
@@ -93,7 +87,7 @@ function setEmoji(img, name) {
   img.style.backgroundPosition = "-" + (72*x) + "px -" + (72*y) + "px";
   img.style.backgroundSize = "2304px 2304px";
 
-  container.appendChild(img);
+  document.querySelector(".world").appendChild(img);
 }
 
 function render(entities) {
@@ -111,6 +105,8 @@ function render(entities) {
     }
     setEmoji(image, entity.name)
     image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
+    // TODO opacity
+    // TODO visible
   }
 
   
@@ -121,17 +117,31 @@ function choose(options) {
   return options[Math.floor(Math.random() * options.length)]
 }
 
+function doRender(){
+	var update = updates.shift()
+	if(update){
+		render(update)
+	}
+}
+
+var updates = []
 function main(conn, emoji) {
   window.conn = conn
 
   conn.on(json => {
     switch (json.type) {
       case 'world':
-        render(json.entities)
+        updates.push(json.entities)
         break
     }
   })
 
+  // document.querySelector('.container').offsetWidth
+
   conn.send({ type: 'spawn', name: choose(emojiNames) })
+  
+  let fps = 25;
+  window.setInterval(doRender, 1000.0 / fps);
+
 }
 

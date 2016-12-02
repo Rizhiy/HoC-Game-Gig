@@ -39,11 +39,12 @@ var server = http.createServer(function(request, response) {
       break
   }
 
-  fs.readFile(`static/${filePath}`, function(error, content) {
+  let fp = /^\.\/node_modules\//.test(filePath) ? filePath : `static/${filePath}`
+  fs.readFile(fp, function(error, content) {
     if (error) {
       if(error.code == 'ENOENT'){
         fs.readFile('./404.html', function(error, content) {
-          response.writeHead(200, { 'Content-Type': contentType })
+          response.writeHead(404, { 'Content-Type': contentType })
           response.end(content, 'utf-8')
         })
       }
@@ -54,7 +55,11 @@ var server = http.createServer(function(request, response) {
       }
     }
     else {
-      response.writeHead(200, { 'Content-Type': contentType, 'Content-Length': content.length })
+      response.writeHead(200, {
+        'Content-Type': contentType,
+        'Content-Length': content.length,
+        'Cache-Control': 'max-age=31536000',
+      })
       response.end(content, 'utf-8')
     }
   })
