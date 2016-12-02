@@ -17,7 +17,7 @@ function evaluate(thing, ctx) {
   switch (selector) {
     case 'spawnEntity':
       var [name] = args
-      ctx.game.spawn(name, ctx.x, ctx.y)
+      ctx.spawned = ctx.game.spawn(name, ctx.x, ctx.y)
       break
     case 'removeEntity':
       ctx.game.remove(ctx.entity.id)
@@ -238,6 +238,9 @@ function value(thing, ctx) {
     case "mouseX": return ctx.mouseX
     case "mouseY": return ctx.mouseY
 
+    case 'spawned':
+      return ctx.spawned || ctx.entity
+
     case 'nearest':
       let emoji = args[0]
       // TODO find nearest emoji!
@@ -285,13 +288,17 @@ class Thread {
       }
       var ctx = frame.ctx
 
-      //console.log(block)
+      console.log(block)
 
       var selector = block[0]
       var args = block.slice(1)
       switch (selector) {
         case 'with':
-          stack.push(new Frame(args[1], value(args[0], ctx)))
+          ctx = Object.assign({}, ctx, {
+            entity: value(args[0], ctx),
+          })
+          stack.push(new Frame(args[1], ctx))
+          frame.index++
           break
         case 'doIf':
           var cond = value(args[0], ctx)
@@ -306,6 +313,7 @@ class Thread {
           stack.push(new Frame(args[0], ctx, true))
           break
         case 'whenKeyPressed':
+        case 'whenClick':
           frame.index++
           break
         default:

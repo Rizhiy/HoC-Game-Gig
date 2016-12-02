@@ -809,7 +809,7 @@ var Language = (function(Earley) {
   }
 
   menus.forEach(function(name) {
-    if (menusThatAcceptReporters.indexOf(name) > -1) {
+    if (true) {
       g.addRule(Rule("m_" + name, ["jpart"], identity));
     }
     var options = menuOptions[name];

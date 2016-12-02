@@ -6,6 +6,7 @@ var Scratch = (function() {
     ["spawn %m.emoji",					    " ", 3, "spawnEntity"],
     ["destroy",								" ", 3, "removeEntity"],
     ["nearest %m.emoji",				    "r", 3, "nearestEntity"],
+    ["spawned",				                "r", 3, "spawned"],
 
     // ["wait %n secs",						" ", 6, "wait:elapsed:from:",	1],
     ["repeat %n",							"c", 6, "doRepeat", 10],
@@ -70,7 +71,7 @@ var Scratch = (function() {
     ["when I press %m.key",				    "h", 5, "whenKeyPressed", 		"space"],
     ["when I click",				        "h", 5, "whenClick"],
     // TODO when touching <other entity>...
-    ["with %m.spriteOnly",				"c", 6, "with:", "myself"],
+    ["with %m.spriteOnly",				    "c", 6, "with", "myself"],
 
     // sensing
     ["timer",								"r", 7, "timer"],
