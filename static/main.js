@@ -78,18 +78,18 @@ function addGround(){
     ground.style.height = "100px";
     ground.style.backgroundColor = "black";
     ground.style.position = "absolute";
-    ground.style.top = "2000px";
+    ground.style.top = "2050px";
     ground.style.left = "0px";
     return ground
 }
 
 function addSky(){
     var sky = document.createElement("div");
-    sky.style.width = "4000px";
+    sky.style.width = "4100px";
     sky.style.height = "100px";
     sky.style.backgroundColor = "blue";
     sky.style.position = "absolute";
-    sky.style.top = "0px";
+    sky.style.top = "-80px";
     sky.style.left = "0px";
     return sky
 }
@@ -97,22 +97,22 @@ function addSky(){
 function addLeft(){
     var left = document.createElement("div");
     left.style.width = "100px";
-    left.style.height = "2000px";
+    left.style.height = "2100px";
     left.style.backgroundColor = "grey";
     left.style.position = "absolute";
     left.style.top = "0px";
-    left.style.left = "0px";
+    left.style.left = "-80px";
     return left;
 }
 
 function addRight(){
     var right = document.createElement("div");
     right.style.width = "100px";
-    right.style.height = "2000px";
+    right.style.height = "2100px";
     right.style.backgroundColor = "grey";
     right.style.position = "absolute";
     right.style.top = "0px";
-    right.style.right = "-100px";
+    right.style.right = "-150px";
     return right;
 }
 
