@@ -37,8 +37,10 @@ var Scratch = (function() {
     ["%m.mathOp of %n",						"r", 8, "computeFunction:of:",	"sqrt", 9],
 
     // physics
-    ["move %n steps",						" ", 1, "forward",					10],
+    ["forward %n",						" ", 1, "forward",					10],
     ["turn %n degrees",			            " ", 1, "rotate",				15],
+    ["change x by %n",						" ", 1, "changeX",					10],
+    ["change y by %n",			            " ", 1, "changeY",				15],
     ["point in direction %d.direction",		" ", 1, "setAngle",					90],
     ["point towards %m.spriteOrMouse",		" ", 1, "pointTowardsEntity",			""],
     ["go to x:%n y:%n",						" ", 1, "gotoXY"],

@@ -212,11 +212,11 @@ function choose(options) {
 }
 
 function doRender(){
-	var update = updates.shift()
-	if(update){
-		render(update)
-	}
-  console.log(updates.length)
+  var update = updates.shift()
+  if(update){
+      render(update)
+  }
+  updates = updates.slice(updates.length - 5)
 }
 
 var container = document.querySelector('.container')

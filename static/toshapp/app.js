@@ -732,7 +732,6 @@ editor.cm.on('keydown', (cm, e) => {
     if (!scripts) {
       return
     }
-    console.log(scripts)
     if (!scripts || !scripts.length) return
 
     conn.send({

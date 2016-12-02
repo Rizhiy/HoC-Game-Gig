@@ -6,49 +6,59 @@ const emojiList = require('./static/emoji-list.js')
 
 function evaluate(thing, ctx) {
   let selector = thing[0]
-  let args = Array.from(thing).slice(1)
+  let inputs = Array.from(thing).slice(1)
 
-  let length = args.length
-  var values = []
+  let length = inputs.length
+  var args = []
   for (var i=0; i<length; i++) {
-    values.push(value(args[i], ctx))
+    args.push(value(inputs[i], ctx))
   }
 
   switch (selector) {
     case 'spawnEntity':
-      var [name] = values
+      var [name] = args
       ctx.game.spawn(name, ctx.x, ctx.y)
       break
     case 'setEmoji':
-      var [name] = values
+      var [name] = args
       ctx.entity.name = name
       break
     case 'say':
-      var [message] = values
+      var [message] = args
       ctx.game.broadcast({ type: 'messagebox', id: ctx.entity.id, message })
       break
 
     case 'setAngle':
-      var [angle] = values
+      var [angle] = args
       Matter.Body.setAngle(ctx.entity.body, Math.PI / 180 * angle)
       break
     case 'rotate': // TODO torque?!?!
-      var [angle] = values
+      var [angle] = args
       Matter.Body.rotate(ctx.entity.body, Math.PI / 180 * angle)
       break
 
     case 'setMass':
-      var [mass] = values
+      var [mass] = args
       Matter.Body.setMass(ctx.entity.body, mass)
       break
 
     case 'gotoXY':
-      var [x, y] = values
+      var [x, y] = args
       Matter.Body.setPosition(ctx.entity.body, {x, y})
+      break
+    case 'changeX':
+      var [x] = args
+      var y = 0
+      Matter.Body.translate(ctx.entity.body, {x, y})
+      break
+    case 'changeY':
+      var x = 0
+      var [y] = args
+      Matter.Body.translate(ctx.entity.body, {x, y})
       break
 
     case 'forward':
-      var [amount] = values
+      var [amount] = args
       var body = ctx.entity.body
       var x = Math.sin(body.angle) / 100 * amount
       var y = Math.cos(body.angle) / 100 * amount
@@ -60,6 +70,8 @@ function evaluate(thing, ctx) {
       console.log('unknown selector', selector, JSON.stringify(args))
   }
 }
+
+var DIGIT = /^[0-9.]+$/
 
 var compare = function(x, y) {
     if ((typeof x === 'number' || DIGIT.test(x)) && (typeof y === 'number' || DIGIT.test(y))) {
@@ -189,12 +201,12 @@ function value(thing, ctx) {
   }
 
   let selector = thing[0]
-  let args = thing.slice(1)
+  let inputs = thing.slice(1)
 
-  let length = args.length
-  var values = []
+  let length = inputs.length
+  var args = []
   for (var i=0; i<length; i++) {
-    values.push(value(args[i], ctx))
+    args.push(value(inputs[i], ctx))
   }
 
   switch (selector) {
