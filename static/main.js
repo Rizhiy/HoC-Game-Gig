@@ -59,6 +59,13 @@ function loadEmoji(cb) {
     xhr.send();
 }
 
+window.addEventListener("load", () => {
+  let conn = new Connection()
+  conn.opened = () => {
+    loadEmoji(emoji => main(conn, emoji))
+  }
+})
+
 let images = {}
 
 function createDiv() {
@@ -70,6 +77,7 @@ function createDiv() {
   return img
 }
 
+
 function setEmoji(img, name) {
   var pos = emojiNames.indexOf(name);
   var x = pos % 32;
@@ -78,7 +86,7 @@ function setEmoji(img, name) {
   img.style.backgroundPosition = "-" + (72*x) + "px -" + (72*y) + "px";
   img.style.backgroundSize = "2304px 2304px";
 
-  document.body.appendChild(img);
+  document.querySelector(".world").appendChild(img);
 }
 
 function render(entities) {
@@ -105,7 +113,6 @@ function render(entities) {
 		world.style.left = byId[playerid].x
 		world.style.top = byId[playerid].y
 	}
-
   // TODO remove dead entities
 }
 
@@ -141,6 +148,7 @@ function main(conn, emoji) {
   
   let fps = 25;
   window.setInterval(doRender, 1000.0 / fps);
+
 }
 
 

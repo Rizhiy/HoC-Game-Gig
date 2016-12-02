@@ -35,6 +35,11 @@ strong {
   float: right;
 }
 
+.world{
+	height: 4000px;
+	width: 2000px;
+}
+
 /*****************************************************************************/
 
 body {
@@ -160,6 +165,8 @@ body {
   position: absolute;
   top: 0; left: 0; right: 0;
   bottom: 256px;
+  background: red;
+  overflow: hidden;
 }
 
 .editor {
