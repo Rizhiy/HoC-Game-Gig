@@ -101,8 +101,15 @@ class Game {
   }
 
   handle_code(id, json) {
+    let player = this.players[id]
     let code = json.code
+
     console.log(json)
+
+    let body = player.entity.body
+    Matter.Body.applyForce(body, body.position, { x: 10, y: 0 })
+
+
     // TODO
   }
 
