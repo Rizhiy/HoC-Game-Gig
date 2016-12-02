@@ -21,27 +21,24 @@ class Player {
 
 
 class Entity {
-  constructor(name, x = 0, y = 0, rot = 0, scale = 1, opacity = 1, mass = 1) {
-    this.id = ++Entity.highestId
+  constructor(name, x = 0, y = 0) {
     this.name = name
-    this.x = x
-    this.y = y
-    this.rot = rot
-    this.scale = scale
-    this.opacity = opacity
-    this.mass = mass
+    this.body = Matter.Bodies.circle(x, y, Entity.RADIUS)
+    this.id = this.body.id
   }
 
   toJSON() {
+    let body = this.body
+    let render = body.render
     return {
       id: this.id,
       name: this.name,
-      x: this.x,
-      y: this.y,
-      rot: this.rot,
-      scale: this.scale,
-      opacity: this.opacity,
-      mass: this.mass,
+      x: body.position.x,
+      y: body.position.y,
+      rot: 180 / Math.PI * body.angle,
+      scale: render.sprite.xScale,
+      opacity: render.opacity,
+      visible: render.visible,
     }
   }
 }
@@ -107,7 +104,6 @@ class Game {
     this.entities.push(entity)
     this.entitiesById[entity.id] = entity
 
-    entity.body = Matter.Bodies.circle(entity.x, entity.y, Entity.RADIUS)
     Matter.World.addBody(this.engine.world, entity.body)
   }
 
@@ -127,14 +123,6 @@ class Game {
   tick(fps) {
     // TODO sync entity values to/from Matter.js ???
     Matter.Engine.update(this.engine, 1000/fps)
-
-    let entities = this.entities
-    for (var i=entities.length; i--; ) {
-      let entity = entities[i]
-      entity.x = entity.body.position.x
-      entity.y = entity.body.position.y
-      entity.rot = 180 / Math.PI * entity.body.angle
-    }
 
     this.stream()
   }
