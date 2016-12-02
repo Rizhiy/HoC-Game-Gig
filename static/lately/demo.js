@@ -11,29 +11,16 @@ file --> NL file                  ${(a, b) => b}
 blankLines --> NL NL
             | blankLines NL
 
-script => cheese                  ${a => a}
+script --> stmt                    ${a => [a]}
+        | script NL stmt          ${(a, b, c) => a.concat(c)}
 
-cheese => 'hello' foo 'world'     ${function() { return ['hello:world', arguments[3]] }}
-       | '1'
-
-foo --> thing                     ${a => a}
-      | thing2                    ${a => a}
-      | op                        ${a => a}
-
-thing => 'sweet'                  ${() => ['sweetConstant']}
-       | 'happy'                  ${() => ['happyConstant']}
-
-thing2 => 'swe'                   ${() => ['shortConst']}
-
-op => 'really' foo                ${(a, b) => ['really', b]}
-
-op => foo 'and' foo               ${(a, b, c) => ['+', a, c]}
-
-int --> /[0-9]+/                  ${parseInt}
+stmt => 'hello' 'world'
+      | 'duck' 'face'
 
 NL --> '\n'
 SEP --> ' '
       | NL
+
 `
 
 function hm(d) {
@@ -46,7 +33,7 @@ function hm(d) {
 
 var highlightMap = hm({
   cheese: 'string',
-  thing: 'keyword',
+  stmt: 'keyword',
   thing2: 'atom',
   op: 'number',
 })
