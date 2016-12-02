@@ -56,8 +56,8 @@ var Scratch = (function() {
     // visuals
     ["set opacity to %n%",			        " ", 2, "setOpacity",		0],
     ["change opacity by %n%",		        " ", 2, "changeOpacity",	10],
-    ["set size to %n%",						" ", 2, "setScale", 				100],
-    ["change size by %n",					" ", 2, "changeScale",	 		10],
+    ["scale by %n%",						" ", 2, "scaleBy", 				100],
+    //["change size by %n",					" ", 2, "changeScale",	 		10],
     ["show",								" ", 2, "show"],
     ["hide",								" ", 2, "hide"],
     ["say %s",								" ", 2, "say",							"Hello!"],

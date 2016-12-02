@@ -3,7 +3,6 @@ const Matter = require('matter-js/build/matter.js')
 
 const emojiList = require('./static/emoji-list.js')
 
-
 function evaluate(thing, ctx) {
   let selector = thing[0]
   let inputs = Array.from(thing).slice(1)
@@ -37,6 +36,15 @@ function evaluate(thing, ctx) {
       Matter.Body.rotate(ctx.entity.body, Math.PI / 180 * angle)
       break
 
+    case 'scaleBy':
+      var [percent] = args
+      var f = percent / 100
+      var body = ctx.entity.body
+      //var scale = body.render.sprite.xScale
+      Matter.Body.scale(body, f, f)
+      body.render.sprite.xScale *= f
+      break
+
     case 'setMass':
       var [mass] = args
       Matter.Body.setMass(ctx.entity.body, mass)
@@ -62,7 +70,6 @@ function evaluate(thing, ctx) {
       var body = ctx.entity.body
       var x = Math.sin(body.angle) / 100 * amount
       var y = Math.cos(body.angle) / 100 * amount
-      console.log(x, y)
       Matter.Body.applyForce(body, body.position, {x, y})
       break
 
@@ -254,6 +261,7 @@ function value(thing, ctx) {
 
 class Frame {
   constructor(blocks, ctx, yieldAtEnd = false) {
+    if (!blocks) throw new Error('no blocks')
     this.blocks = blocks
     this.index = 0
     this.ctx = ctx
@@ -277,9 +285,14 @@ class Thread {
       var block = frame.blocks[frame.index]
       if (!block) {
         stack.pop()
+        if (frame.yieldAtEnd) {
+          break
+        }
         continue
       }
       var ctx = frame.ctx
+
+      //console.log(block)
 
       var selector = block[0]
       var args = block.slice(1)
@@ -298,14 +311,14 @@ class Thread {
           } else if (!cond && args[2]) {
             stack.push(new Frame(args[2], ctx))
           }
-          this.index++
+          frame.index++
           break
-        case 'forever':
-          stack.push(new Frame(args[1], ctx, true))
+        case 'doForever':
+          stack.push(new Frame(args[0], ctx, true))
           break
         default:
           evaluate(block, ctx)
-          this.index++
+          frame.index++
       }
     }
     return true // don't destroy me
@@ -315,11 +328,21 @@ class Thread {
 
 function evaluateInteractive(blocks, ctx) {
   var thread = new Thread(blocks, ctx)
-  while (thread.step()) {}
+  if (thread.step()) {
+    ctx.entity.threads.push(thread)
+  }
 }
 
 function tickEntity(entity) {
-
+  let threads = entity.threads
+  var survive = []
+  for (var i=0; i<threads.length; i++) {
+    var thread = threads[i]
+    if (thread.step()) {
+      survive.push(thread)
+    }
+  }
+  entity.threads = survive
 }
 
 module.exports = {

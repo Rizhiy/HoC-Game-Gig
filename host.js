@@ -180,7 +180,15 @@ class Game {
     // TODO sync entity values to/from Matter.js ???
     Matter.Engine.update(this.engine, 1000/fps)
 
+    this.tickEntities()
     this.stream()
+  }
+
+  tickEntities() {
+    let entities = this.entities
+    for (var i=entities.length; i--; ) {
+      runtime.tickEntity(entities[i])
+    }
   }
 
   // send world to clients
