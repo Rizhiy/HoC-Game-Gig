@@ -314,7 +314,9 @@ function main(conn, emoji) {
         break
       case 'remove_entity':
         removed[json.id] = true
-        world.removeChild(images[json.id])
+        if (images[json.id]) {
+          world.removeChild(images[json.id])
+        }
         delete images[json.id]
     }
   })

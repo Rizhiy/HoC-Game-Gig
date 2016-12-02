@@ -39,6 +39,22 @@ function evaluate(thing, ctx) {
       var [angle] = args
       Matter.Body.rotate(body, Math.PI / 180 * angle)
       break
+    case 'pointTowardsEntity':
+      var [entity] = args
+      // TODO
+      break
+    case 'distanceTo:':
+      var [entity] = args
+      // TODO
+      break
+    case 'gotoEntity':
+      var [entity] = args
+      // TODO
+      break
+
+    case 'timer':
+      // TODO
+      break
 
     case 'scaleBy':
       var [percent] = args
@@ -187,7 +203,10 @@ function num(x) {
 }
 
 function str(s) {
-    return "" + s
+  if (typeof s === 'object') {
+    return 'a ' + s.name
+  }
+  return "" + s
 }
 
 function bool(x) {
@@ -317,6 +336,17 @@ class Thread {
           break
         case 'doForever':
           stack.push(new Frame(args[0], ctx, true))
+          break
+        case 'doRepeat':
+          if (frame.count === undefined) {
+            frame.count = value(args[0])
+          }
+          frame.count--
+          if (frame.count >= 0) {
+            stack.push(new Frame(args[1], ctx, true))
+          } else {
+            frame.index++
+          }
           break
         case 'whenKeyPressed':
         case 'whenClick':
