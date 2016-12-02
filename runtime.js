@@ -273,9 +273,18 @@ function value(thing, ctx) {
       return ctx.spawned || ctx.entity
 
     case 'nearestEntity':
-      entity = findClosest(ctx.entity.position.x, ctx.entity.position.y)
+      entity = findClosest(ctx.game, ctx.entity, null)
+      return entity || ctx.entity
+    case 'nearestEntityKind':
+      entity = findClosest(ctx.game, ctx.entity, args[0])
       console.log(entity)
-      return entity
+      return entity || ctx.entity
+    case 'targetEntity':
+      entity = findClosestToPoint(ctx.game, ctx.mouseX - 32, ctx.mouseY - 32)
+      console.log(entity)
+      console.log(ctx.mouseX, ctx.mouseY, entity.body.position)
+      return entity || ctx.entity
+
 
     case 'randomEmoji':
       return choose(emojiList)
@@ -319,7 +328,7 @@ class Thread {
       }
       var ctx = frame.ctx
 
-      console.log(block)
+      //console.log(block)
 
       var selector = block[0]
       var args = block.slice(1)
@@ -427,10 +436,34 @@ var getKeyCode = function(keyName) {
   return KEY_CODES[keyName.toLowerCase()] || keyName.toUpperCase().charCodeAt(0);
 };
 
-function findClosest(x,y){
+function findClosest(game, me, name){
+  let x = me.body.position.x
+  let y = me.body.position.y
     var closest = null;
     var smallestDistance = null;
-    Game.entities.forEach(function(entity){
+    game.entities.forEach(function(entity){
+      if (entity === me) return
+      if (name !== null && entity.name !== name) return
+            var dx = x - entity.body.position.x;
+            var dy = y - entity.body.position.y;
+            var distance = Math.sqrt(dx*dx + dy*dy);
+            if(!closest) {
+                closest = entity;
+                smallestDistance = distance;
+            }
+            if(distance < smallestDistance){
+                closest = entity;
+                smallestDistance = distance;
+            }
+        }
+    );
+    return closest;
+}
+
+function findClosestToPoint(game, x, y){
+    var closest = null;
+    var smallestDistance = null;
+    game.entities.forEach(function(entity){
             var dx = x - entity.body.position.x;
             var dy = y - entity.body.position.y;
             var distance = Math.sqrt(dx*dx + dy*dy);

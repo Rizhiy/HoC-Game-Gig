@@ -5,7 +5,9 @@ var Scratch = (function() {
     // entities
     ["spawn %m.emoji",					    " ", 3, "spawnEntity"],
     ["destroy",								" ", 3, "removeEntity"],
-    ["nearest %m.emoji",				    "r", 3, "nearestEntity"],
+    ["nearest %m.emoji",				    "r", 3, "nearestEntityKind"],
+    ["nearest",				                "r", 3, "nearestEntity"],
+    ["target",				                "r", 3, "targetEntity"],
     ["spawned",				                "r", 3, "spawned"],
 
     // ["wait %n secs",						" ", 6, "wait:elapsed:from:",	1],
