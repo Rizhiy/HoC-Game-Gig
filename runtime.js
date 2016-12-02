@@ -272,7 +272,7 @@ function value(thing, ctx) {
     case 'spawned':
       return ctx.spawned || ctx.entity
 
-    case 'nearest':
+    case 'nearestEntity':
       entity = findClosest(ctx.entity.position.x, ctx.entity.position.y)
       console.log(entity)
       return entity
