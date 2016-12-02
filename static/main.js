@@ -338,6 +338,7 @@ function sendKey(e){
 }
 window.addEventListener("keydown",sendKey);
 
+
 function sendMouse(e) {
     e = e || window.event;
     
