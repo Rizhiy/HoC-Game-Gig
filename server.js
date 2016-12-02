@@ -4,6 +4,10 @@ const http = require('http')
 const path = require('path')
 const fs = require('fs')
 
+const host = require('./host')
+
+
+
 var server = http.createServer(function(request, response) {
 
   console.log('request starting...')
@@ -75,6 +79,11 @@ function originIsAllowed(origin) {
   return true
 }
 
+
+
+let game = new host.Game()
+
+let highestId = 0
 wsServer.on('request', function(request) {
   if (!originIsAllowed(request.origin)) {
     // Make sure we only accept requests from an allowed origin 
@@ -85,16 +94,24 @@ wsServer.on('request', function(request) {
 
   var connection = request.accept('', request.origin)
   console.log((new Date()) + ' Connection accepted.')
+
+  let playerId = ++highestId
+  game.player(playerId, send)
+
+  function send(json) {
+    connection.sendUTF(JSON.stringify(json))
+  }
+
   connection.on('message', function(message) {
     if (message.type !== 'utf8') throw 'oops'
     let json = JSON.parse(message.utf8Data)
-
-    // TODO magic
-
-    connection.sendUTF(JSON.stringify(json))
+    game.handle(playerId, json)
   })
+
   connection.on('close', function(reasonCode, description) {
     console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.')
+    game.removePlayer(playerId)
   })
+
 })
 
