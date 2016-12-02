@@ -63,8 +63,8 @@ var Scratch = (function() {
     ["change opacity by %n%",		        " ", 2, "changeOpacity",	10],
     ["scale by %n%",						" ", 2, "scaleBy", 				100],
     //["change size by %n",					" ", 2, "changeScale",	 		10],
-    ["show",								" ", 2, "show"],
-    ["hide",								" ", 2, "hide"],
+    // ["show",								" ", 2, "show"],
+    // ["hide",								" ", 2, "hide"],
     ["say %s",								" ", 2, "say",							"Hello!"],
     ["set emoji to %m.emoji",		        " ", 2, "setEmoji",				"pile of poo"],
     ["emoji",							    "r", 2, "getEmoji"],
@@ -111,10 +111,10 @@ var Scratch = (function() {
     // ["reset timer",							" ", 7, "timerReset"],
 
     // variables --unsupported
-    ["set %m.var to %s",								" ", 9, "setVar:to:"],
-    ["change %m.var by %n",								" ", 9, "changeVar:by:"],
-    ["show variable %m.var",							" ", 9, "showVariable:"],
-    ["hide variable %m.var",							" ", 9, "hideVariable:"],
+    // ["set %m.var to %s",								" ", 9, "setVar:to:"],
+    // ["change %m.var by %n",								" ", 9, "changeVar:by:"],
+    // ["show variable %m.var",							" ", 9, "showVariable:"],
+    // ["hide variable %m.var",							" ", 9, "hideVariable:"],
 
     //// lists -- unsupported
     //["add %s to %m.list",								" ", 12, "append:toList:"],
