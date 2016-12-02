@@ -165,6 +165,16 @@ class Game {
       out.push(entities[i].toJSON())
     }
     this.broadcast({ type: 'world', entities: out })
+    
+    let players = this.players
+    out = []
+    for(let ply_idx in players){
+        let player = players[ply_idx]
+        if(player.entity){
+            out.push({id: player.entity.id, x: player.mouseX, y: player.mouseY})
+        }
+    }
+    this.broadcast({ type: 'mousePos', coords: out})
   }
 
   spawn(name, x, y) {
