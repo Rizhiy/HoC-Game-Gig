@@ -10,6 +10,8 @@ class Player {
     this.game = game
     this.id = id
     this.send = send
+
+    this.onKey = {}
   }
 
   place(name, x = 0, y = 0) {
@@ -18,8 +20,22 @@ class Player {
   }
 
   destroy() {
+    this.game.remove(this.entity)
+    // TODO anything else?
   }
 
+  run(code, interactive = false) {
+    let player = this
+    runtime.evaluate(code, {
+      player: player,
+      entity: player.entity,
+      game: this.game,
+      x: player.entity.body.position.x,
+      y: player.entity.body.position.y,
+      mouseX: player.mouseX,
+      mouseY: player.mouseY
+    }, interactive)
+  }
 }
 
 
@@ -132,26 +148,24 @@ class Game {
     let code = scripts[0]
     console.log(JSON.stringify(code))
 
-    runtime.evaluate(code, {
-      player: player.entity,
-      entity: player.entity,
-      game: this,
-      x: player.entity.body.position.x,
-      y: player.entity.body.position.y,
-      mouseX: player.mouseX,
-      mouseY: player.mouseY
-    })
+    player.run(code, true)
   }
 
-  handle_keydown(id, json) {
-    // TODO
-  }
-  
   handle_mouseMove(id, json) {
       let player = this.players[id]
       player.mouseX = json.position.x
       player.mouseY = json.position.y
   }
+
+  handle_keydown(id, json) {
+    let player = this.players[id]
+    let code = player.onKey[json.keyCode]
+    console.log(code)
+    if (code) {
+      player.run(code)
+    }
+  }
+  
 
 
   /* entities */
@@ -167,10 +181,12 @@ class Game {
     let entity = this.entitiesById[entityId]
     delete this.entitiesById[entityId]
     let index = this.entities.indexOf(entity)
-    if (index === -1) throw 'already removed'
+    if (index === -1) return
     this.entities.splice(index, 1)
 
-    // TODO remove Matter.js entity
+    Matter.World.remove(this.engine.world, entity.body)
+
+    this.broadcast({ type: 'remove_entity', id: entityId })
   }
 
 

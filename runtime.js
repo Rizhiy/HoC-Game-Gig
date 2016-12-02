@@ -19,6 +19,9 @@ function evaluate(thing, ctx) {
       var [name] = args
       ctx.game.spawn(name, ctx.x, ctx.y)
       break
+    case 'removeEntity':
+      ctx.game.remove(ctx.entity.id)
+      break
     case 'setEmoji':
       var [name] = args
       ctx.entity.name = name
@@ -57,7 +60,6 @@ function evaluate(thing, ctx) {
       body.render.opacity += args[0] / 100
       break
 
-
     case 'gotoXY':
       var [x, y] = args
       Matter.Body.setPosition(body, {x, y})
@@ -85,7 +87,6 @@ function evaluate(thing, ctx) {
     case 'impulseY':
       Matter.Body.applyForce(body, body.position, {x: 0, y: -args[0] / 1000 })
       break
-
 
     default:
       console.log('unknown selector', selector, JSON.stringify(args))
@@ -214,7 +215,7 @@ function bool(x) {
 function value(thing, ctx) {
   if (!(thing && thing.constructor === Array)) {
     if (thing === '_myself_') {
-      return ctx.player
+      return ctx.player.entity
     } else if (thing === '_mouse_') {
       // TODO mouse pointer
     }
@@ -311,10 +312,6 @@ class Thread {
       var selector = block[0]
       var args = block.slice(1)
       switch (selector) {
-        case 'whenKeyPressed':
-          // TODO
-          console.log(ctx.player)
-          break
         case 'with':
           stack.push(new Frame(args[1], value(args[0], ctx)))
           break
@@ -330,6 +327,9 @@ class Thread {
         case 'doForever':
           stack.push(new Frame(args[0], ctx, true))
           break
+        case 'whenKeyPressed':
+          frame.index++
+          break
         default:
           evaluate(block, ctx)
           frame.index++
@@ -340,7 +340,19 @@ class Thread {
 }
 
 
-function evaluateInteractive(blocks, ctx) {
+function evaluateInteractive(blocks, ctx, interactive) {
+  if (!blocks) return
+  var first = blocks[0]
+  if (!first) return
+
+  if (interactive) {
+    switch (first[0]) {
+      case 'whenKeyPressed': // bind key
+        ctx.player.onKey[getKeyCode(first[1])] = blocks
+        return
+    }
+  }
+
   var thread = new Thread(blocks, ctx)
   if (thread.step()) {
     ctx.entity.threads.push(thread)
@@ -367,4 +379,18 @@ module.exports = {
 function choose(options) {
   return options[Math.floor(Math.random() * options.length)]
 }
+
+
+var KEY_CODES = {
+  'space': 32,
+  'left arrow': 37,
+  'up arrow': 38,
+  'right arrow': 39,
+  'down arrow': 40,
+  'any': 128
+};
+
+var getKeyCode = function(keyName) {
+  return KEY_CODES[keyName.toLowerCase()] || keyName.toUpperCase().charCodeAt(0);
+};
 

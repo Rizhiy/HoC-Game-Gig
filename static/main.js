@@ -61,6 +61,7 @@ function loadEmoji(cb) {
 }
 
 let images = {}
+var removed = {}
 
 function createDiv() {
   var img = document.createElement("div");
@@ -123,8 +124,8 @@ function setEmoji(img, name) {
 
   img.style.backgroundPosition = "-" + (72*x) + "px -" + (72*y) + "px";
   img.style.backgroundSize = "2304px 2304px";
-  
-  document.querySelector(".world").appendChild(img);
+
+  world.appendChild(img);
 }
 
 var messageboxes = {}
@@ -141,7 +142,7 @@ function addMessageBox(entid, msg) {
     div.style.zIndex = 1
     div.innerHTML = msg
     
-    document.querySelector(".world").appendChild(div)
+    world.appendChild(div)
     
     mbid += 1
     messageboxes[mbid] = {div, id: entid};
@@ -161,6 +162,7 @@ function render(entities) {
   let msgboxesById = {}
   for (var i=0; i<entities.length; i++) {
     let entity = entities[i]
+    if (removed[entity.id]) return
     byId[entity.id] = entity
   }
   
@@ -209,8 +211,6 @@ function render(entities) {
     // TODO opacity
     // TODO visible
   }
-  
-  let world = document.querySelector(".world")
 
   let player = byId[playerid]
   if (player) {
@@ -220,7 +220,6 @@ function render(entities) {
     var cy = -player.y + h/2
     world.style.transform = `translate(${cx}px, ${cy}px)`
   }
-  // TODO remove dead entities
 }
 
 function choose(options) {
@@ -234,7 +233,8 @@ function doRender(){
   }
   updates = updates.slice(updates.length - 5)
 }
-
+  
+var world = document.querySelector(".world")
 var container = document.querySelector('.container')
 var updates = []
 function main(conn, emoji) {
@@ -252,6 +252,10 @@ function main(conn, emoji) {
       case 'messagebox':
         addMessageBox(json.id, json.message)
         break
+      case 'remove_entity':
+        removed[json.id] = true
+        world.removeChild(images[json.id])
+        delete images[json.id]
     }
   })
 
