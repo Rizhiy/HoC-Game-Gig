@@ -44,6 +44,30 @@ class Entity {
       visible: render.visible,
     }
   }
+
+  distanceTo(other){
+    dx = this.body.position.x - other.body.position.x;
+    dy = this.body.position.y - other.body.position.y;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+
+  findClosest(){
+    var closest = null;
+    var smallestDistance = null;
+    Game.entities.forEach(function(entity){
+        var distance = this.distanceTo(entity);
+        if(!closest) {
+            closest = entity;
+            smallestDistance = distance;
+        }
+        if(distance < smallestDistance){
+          closest = entity;
+          smallestDistance = distance;
+        }
+      }
+    );
+    return closest;
+  }
 }
 Entity.highestId = 0
 Entity.RADIUS = 36
@@ -58,10 +82,10 @@ class Game {
     this.entitiesById = {}
 
     this.engine = Matter.Engine.create();
-      var sky = Matter.Bodies.rectangle(0,-Game.HEIGHT/2,Game.WIDTH,100,{isStatic:true})
-      var ground = Matter.Bodies.rectangle(0, Game.HEIGHT/2, Game.WIDTH, 100, { isStatic: true })
-      var right = Matter.Bodies.rectangle(Game.WIDTH/2,0,100,Game.HEIGHT,{isStatic:true})
-      var left = Matter.Bodies.rectangle(-Game.WIDTH/2,0,100,Game.HEIGHT,{isStatic:true})
+      var sky = Matter.Bodies.rectangle(0,-(Game.HEIGHT+Game.BORDER_WIDTH)/2,Game.WIDTH+Game.BORDER_WIDTH,Game.BORDER_WIDTH,{isStatic:true})
+      var ground = Matter.Bodies.rectangle(0, (Game.HEIGHT+Game.BORDER_WIDTH)/2, Game.WIDTH+Game.BORDER_WIDTH, Game.BORDER_WIDTH, { isStatic: true })
+      var right = Matter.Bodies.rectangle((Game.WIDTH+Game.BORDER_WIDTH)/2,0,Game.BORDER_WIDTH,Game.HEIGHT+Game.BORDER_WIDTH,{isStatic:true})
+      var left = Matter.Bodies.rectangle(-(Game.WIDTH+Game.BORDER_WIDTH)/2,0,Game.BORDER_WIDTH,Game.HEIGHT+Game.BORDER_WIDTH,{isStatic:true})
       Matter.World.add(this.engine.world,[sky,ground,right,left]);
   }
 
@@ -177,10 +201,10 @@ class Game {
 }
 Game.WIDTH = 4000;
 Game.HEIGHT = 2000;
+Game.BORDER_WIDTH = 1000;
 
 
 
 module.exports = {
   Game,
 }
-
