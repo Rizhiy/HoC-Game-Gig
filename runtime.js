@@ -71,12 +71,12 @@ function evaluate(thing, ctx) {
       
       case 'setRestitution':
           var [rest] = args
-          body.restitution = rest
+          body.restitution = rest/100
           break
       
       case 'setFriction':
         var [fric] = args
-        body.friction = fric
+        body.friction = fric/100
         break
 
     case 'setOpacity':
