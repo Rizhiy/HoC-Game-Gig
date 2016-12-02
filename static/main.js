@@ -62,6 +62,6 @@ function main(conn, emoji) {
     console.log(message)
   })
 
-  conn.send('hello')
+  conn.send({ type: 'spawn', name: 'pile of poo' })
 
 }

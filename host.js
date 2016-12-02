@@ -85,7 +85,7 @@ class Game {
   }
 
   handle_spawn(id, json) {
-    let player = this.players[playerId]
+    let player = this.players[id]
     player.place(json.name, json.x, json.y)
   }
 
