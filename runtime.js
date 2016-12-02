@@ -28,6 +28,11 @@ function evaluate(thing, ctx) {
       var [entity, angle] = values
       Matter.Body.setAngle(entity.body, Math.PI / 180 * angle)
       return null
+      
+    case 'say':
+        var [message] = values
+        ctx.game.broadcast({ type: 'messagebox', id: ctx.entity.id, message }
+        return null
 
     case 'rotate':
       var [entity, angle] = values

@@ -183,6 +183,9 @@ function main(conn, emoji) {
 		console.log("I AM " + json.id)
         playerid = json.id
         break
+      case 'messagebox':
+        console.log("messagebox: " + json.message)
+        break
     }
   })
 
