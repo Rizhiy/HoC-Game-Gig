@@ -2,8 +2,6 @@ var Scratch = (function() {
 
   var scratchCommands = [
 
-    ["with %m.spriteOnly",				"c", 6, "with:", "myself"],
-
     // entities
     ["spawn %m.emoji",					    " ", 3, "spawnEntity"],
     ["destroy",								" ", 3, "removeEntity"],
@@ -71,6 +69,13 @@ var Scratch = (function() {
     // events
     ["when I press %m.key",				    "h", 5, "whenKeyPressed", 		"space"],
     // TODO when touching <other entity>...
+    ["with %m.spriteOnly",				"c", 6, "with:", "myself"],
+
+    // sensing
+    ["timer",								"r", 7, "timer"],
+    ["mouse x",								"r", 7, "mouseX"],
+    ["mouse y",								"r", 7, "mouseY"],
+    ["distance to %m.spriteOrMouse",		"r", 7, "distanceTo:",			""],
 
     //["when @greenFlag clicked",				"h", 5, "whenGreenFlag"],
     //["when this sprite clicked",			"h", 5, "whenClicked"],
@@ -82,11 +87,6 @@ var Scratch = (function() {
     //["create clone of %m.spriteOnly",		" ", 6, "createCloneOf"],
     //["delete this clone",					"f", 6, "deleteClone"],
 
-    // sensing
-    ["timer",								"r", 7, "timer"],
-    ["mouse x",								"r", 7, "mouseX"],
-    ["mouse y",								"r", 7, "mouseY"],
-    ["distance to %m.spriteOrMouse",		"r", 7, "distanceTo:",			""],
     // ["touching %m.touching?",				"b", 7, "touching:",			""],
     // ["touching color %c?",					"b", 7, "touchingColor:"],
     // ["color %c is touching %c?",			"b", 7, "color:sees:"],
