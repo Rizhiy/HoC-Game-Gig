@@ -100,6 +100,12 @@ function render(entities) {
     // TODO visible
   }
 
+	if(playerid){
+		let world = document.querySelector(".world")
+		world.style.left = byId[playerid].x
+		world.style.top = byId[playerid].y
+	}
+
   // TODO remove dead entities
 }
 
@@ -115,6 +121,7 @@ function doRender(){
 }
 
 var updates = []
+var playerid;
 function main(conn, emoji) {
   window.conn = conn
 
@@ -124,7 +131,7 @@ function main(conn, emoji) {
         updates.push(json.entities)
         break
       case 'player_id':
-        console.log("I am", json.id)
+        playerid = json.id
     }
   })
 
