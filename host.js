@@ -102,7 +102,8 @@ class Game {
 
   handle_code(id, json) {
     let player = this.players[id]
-    let code = json.json
+    let scripts = json.json
+    let code = scripts[0]
     console.log(JSON.stringify(code))
 
     runtime.evaluate(code, {

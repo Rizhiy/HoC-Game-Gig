@@ -419,7 +419,7 @@ var Language = (function(Earley) {
   function block(selector) {
     var indexes = [].slice.apply(arguments, [1]);
     var info = Scratch.blocksBySelector[selector];
-    assert(info);
+    assert(info, selector);
     return blockArgs.apply(null, [info].concat(indexes));
   }
 
@@ -623,10 +623,10 @@ var Language = (function(Earley) {
 
     // "join" on the LHS of a comparison is *confusing*
 
-    Rule("predicate", [["touching"], ["color"], "c", ["?"]],
-                                            block("touchingColor:", 2)),
-    Rule("predicate", [["color"], "c", ["is"], ["touching"], "c", ["?"]],
-                                            block("color:sees:", 1, 4)),
+    //Rule("predicate", [["touching"], ["color"], "c", ["?"]],
+    //                                        block("touchingColor:", 2)),
+    //Rule("predicate", [["color"], "c", ["is"], ["touching"], "c", ["?"]],
+    //                                        block("color:sees:", 1, 4)),
 
     /* --------------------------------------------------------------------- */
 
@@ -671,8 +671,8 @@ var Language = (function(Earley) {
     Rule("n2", ["m_mathOp", ["of"], "n2"],  infix("computeFunction:of:")),
     Rule("n2", [["pick"], ["random"], "n4", ["to"], "n2"],
                                             block("randomFrom:to:", 2, 4)),
-    Rule("n2", ["m_attribute", ["of"], "m_spriteOrStage"],
-                                            block("getAttribute:of:", 0, 2)),
+    //Rule("n2", ["m_attribute", ["of"], "m_spriteOrStage"],
+    //                                        block("getAttribute:of:", 0, 2)),
     Rule("n2", [["distance"], ["to"], "m_spriteOrMouse"],
                                             block("distanceTo:", 2)),
     Rule("n2", [["length"], ["of"], "s2"],  block("stringLength:", 2)),
@@ -733,7 +733,7 @@ var Language = (function(Earley) {
       'key', 'list', 'location', 'mathOp', 'rotationStyle', 'scene', 'sound',
       'spriteOnly', 'spriteOrMouse', 'spriteOrStage', 'stageOrThis', 'stop',
       'timeAndDate', 'touching', 'triggerSensor', 'var', 'varName',
-        'videoMotionType', 'videoState'];
+        'videoMotionType', 'videoState', 'emoji'];
 
   var numberMenus = ["direction", "drum", "instrument", "listDeleteItem",
       "listItem", "note"];
@@ -778,6 +778,8 @@ var Language = (function(Earley) {
     'var': [],
     'videoMotionType': ['motion', 'direction'],
     'videoState': ['off', 'on', 'on-flipped'],
+
+    'emoji': emojiNames,
   };
 
   // only generate number literals for some blocks

@@ -14,14 +14,14 @@ function evaluate(thing, ctx) {
   }
 
   switch (selector) {
-    case 'spawn':
+    case 'spawnEntity':
       var [name] = values
       ctx.game.spawn(name, ctx.x, ctx.y)
       break
 
     case 'setEmoji':
-      var [entity, name] = values
-      entity.name = name
+      var [name] = values
+      ctx.entity.name = name
       break
 
     case 'setAngle':
@@ -57,8 +57,17 @@ function evaluate(thing, ctx) {
   }
 }
 
+function num(x) {
+  return +x
+}
+
 function value(thing, ctx) {
   if (!(thing && thing.constructor === Array)) {
+    if (thing === '_myself_') {
+      return ctx.me
+    } else if (thing === '_mouse_') {
+      // TODO mouse pointer
+    }
     return thing
   }
 
@@ -72,8 +81,15 @@ function value(thing, ctx) {
   }
 
   switch (selector) {
-    case 'thisPlayer':
-      return ctx.me
+    case '+': return num(args[0]) + num(args[1])
+    case '-':  return num(args[0]) - num(args[1])
+    case '*':  return num(args[0]) * num(args[1])
+    case '/':  return num(args[0]) / num(args[1])
+
+    case 'nearest':
+      let emoji = args[0]
+      // TODO find nearest emoji!
+      return ctx.this
 
     default:
       console.log('unknown selector', selector, JSON.stringify(args))
