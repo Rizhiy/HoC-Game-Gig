@@ -44,6 +44,30 @@ class Entity {
       visible: render.visible,
     }
   }
+
+  distanceTo(other){
+    dx = this.body.position.x - other.body.position.x;
+    dy = this.body.position.y - other.body.position.y;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+
+  findClosest(){
+    var closest = null;
+    var smallestDistance = null;
+    Game.entities.forEach(function(entity){
+        var distance = this.distanceTo(entity);
+        if(!closest) {
+            closest = entity;
+            smallestDistance = distance;
+        }
+        if(distance < smallestDistance){
+          closest = entity;
+          smallestDistance = distance;
+        }
+      }
+    );
+    return closest;
+  }
 }
 Entity.highestId = 0
 Entity.RADIUS = 36
@@ -184,4 +208,3 @@ Game.BORDER_WIDTH = 1000;
 module.exports = {
   Game,
 }
-
