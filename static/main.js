@@ -39,7 +39,7 @@ function loadEmoji(cb) {
 
     xhr.addEventListener("load", function(){
 		// Remove progress bar
-		document.getElementById("loadingcontainer").remove();
+		//document.getElementById("loadingcontainer").remove();
 		document.querySelector(".editor").style.visibility = "visible";
 
         var arrayBufferView = new Uint8Array( this.response );

@@ -40,6 +40,16 @@ strong {
     height: 100%;
 }
 
+#titlebar {
+    font-size: 5em;
+    font-family: CURSIVE;
+    color: blue;
+    text-align: center;
+    width: 100%;
+    top: 15%;
+    position: absolute;
+}
+
 #barvcenter{
     top: 50%;
     transform: translate(0px, -50%);
