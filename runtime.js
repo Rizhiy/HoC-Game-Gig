@@ -3,7 +3,6 @@ const Matter = require('matter-js/build/matter.js')
 
 const emojiList = require('./static/emoji-list.js')
 
-
 function evaluate(thing, ctx) {
   let selector = thing[0]
   let inputs = Array.from(thing).slice(1)
@@ -14,10 +13,14 @@ function evaluate(thing, ctx) {
     args.push(value(inputs[i], ctx))
   }
 
+  var body = ctx.entity.body
   switch (selector) {
     case 'spawnEntity':
       var [name] = args
       ctx.game.spawn(name, ctx.x, ctx.y)
+      break
+    case 'removeEntity':
+      ctx.game.remove(ctx.entity.id)
       break
     case 'setEmoji':
       var [name] = args
@@ -30,40 +33,59 @@ function evaluate(thing, ctx) {
 
     case 'setAngle':
       var [angle] = args
-      Matter.Body.setAngle(ctx.entity.body, Math.PI / 180 * angle)
+      Matter.Body.setAngle(body, Math.PI / 180 * angle)
       break
     case 'rotate': // TODO torque?!?!
       var [angle] = args
-      Matter.Body.rotate(ctx.entity.body, Math.PI / 180 * angle)
+      Matter.Body.rotate(body, Math.PI / 180 * angle)
+      break
+
+    case 'scaleBy':
+      var [percent] = args
+      var f = percent / 100
+      //var scale = body.render.sprite.xScale
+      Matter.Body.scale(body, f, f)
+      body.render.sprite.xScale *= f
       break
 
     case 'setMass':
       var [mass] = args
-      Matter.Body.setMass(ctx.entity.body, mass)
+      Matter.Body.setMass(body, mass)
+      break
+
+    case 'setOpacity':
+      body.render.opacity = args[0] / 100
+      break
+    case 'changeOpacity':
+      body.render.opacity += args[0] / 100
       break
 
     case 'gotoXY':
       var [x, y] = args
-      Matter.Body.setPosition(ctx.entity.body, {x, y})
+      Matter.Body.setPosition(body, {x, y})
       break
     case 'changeX':
       var [x] = args
       var y = 0
-      Matter.Body.translate(ctx.entity.body, {x, y})
+      Matter.Body.translate(body, {x, y})
       break
     case 'changeY':
       var x = 0
       var [y] = args
-      Matter.Body.translate(ctx.entity.body, {x, y})
+      Matter.Body.translate(body, {x, y})
       break
 
     case 'forward':
       var [amount] = args
-      var body = ctx.entity.body
-      var x = Math.sin(body.angle) / 100 * amount
-      var y = Math.cos(body.angle) / 100 * amount
-      console.log(x, y)
+      var x = -Math.cos(body.angle) / 100 * amount
+      var y = -Math.sin(body.angle) / 100 * amount
       Matter.Body.applyForce(body, body.position, {x, y})
+      break
+    case 'impulseX':
+      Matter.Body.applyForce(body, body.position, {x: args[0] / 1000, y: 0})
+      break
+    case 'impulseY':
+      Matter.Body.applyForce(body, body.position, {x: 0, y: -args[0] / 1000 })
       break
 
     default:
@@ -84,28 +106,6 @@ var compare = function(x, y) {
     var xs = ('' + x).toLowerCase();
     var ys = ('' + y).toLowerCase();
     return xs < ys ? -1 : xs === ys ? 0 : 1;
-};
-
-var numLess = function(nx, y) {
-    if (typeof y === 'number' || DIGIT.test(y)) {
-      var ny = +y;
-      if (ny === ny) {
-        return nx < ny;
-      }
-    }
-    var ys = ('' + y).toLowerCase();
-    return '' + nx < ys;
-};
-
-var numGreater = function(nx, y) {
-    if (typeof y === 'number' || DIGIT.test(y)) {
-      var ny = +y;
-      if (ny === ny) {
-        return nx > ny;
-      }
-    }
-    var ys = ('' + y).toLowerCase();
-    return '' + nx > ys;
 };
 
 var equal = function(x, y) {
@@ -193,7 +193,7 @@ function bool(x) {
 function value(thing, ctx) {
   if (!(thing && thing.constructor === Array)) {
     if (thing === '_myself_') {
-      return ctx.me
+      return ctx.player.entity
     } else if (thing === '_mouse_') {
       // TODO mouse pointer
     }
@@ -251,18 +251,124 @@ function value(thing, ctx) {
   }
 }
 
-function evaluateSeq(things, ctx) {
-  let length = things.length
-  for (var i=0; i<length; i++) {
-    evaluate(things[i], ctx)
+
+class Frame {
+  constructor(blocks, ctx, yieldAtEnd = false) {
+    if (!blocks) throw new Error('no blocks')
+    this.blocks = blocks
+    this.index = 0
+    this.ctx = ctx
+    this.yieldAtEnd = yieldAtEnd
   }
 }
 
+class Thread {
+  constructor(blocks, ctx) {
+    this.stack = [new Frame(blocks, ctx)]
+  }
+
+  step() {
+    let stack = this.stack
+    while (true) {
+      var frame = stack[stack.length - 1]
+      if (!frame) {
+        return false
+      }
+
+      var block = frame.blocks[frame.index]
+      if (!block) {
+        stack.pop()
+        if (frame.yieldAtEnd) {
+          break
+        }
+        continue
+      }
+      var ctx = frame.ctx
+
+      //console.log(block)
+
+      var selector = block[0]
+      var args = block.slice(1)
+      switch (selector) {
+        case 'with':
+          stack.push(new Frame(args[1], value(args[0], ctx)))
+          break
+        case 'doIf':
+          var cond = value(args[0], ctx)
+          if (cond) {
+            stack.push(new Frame(args[1], ctx))
+          } else if (!cond && args[2]) {
+            stack.push(new Frame(args[2], ctx))
+          }
+          frame.index++
+          break
+        case 'doForever':
+          stack.push(new Frame(args[0], ctx, true))
+          break
+        case 'whenKeyPressed':
+          frame.index++
+          break
+        default:
+          evaluate(block, ctx)
+          frame.index++
+      }
+    }
+    return true // don't destroy me
+  }
+}
+
+
+function evaluateInteractive(blocks, ctx, interactive) {
+  if (!blocks) return
+  var first = blocks[0]
+  if (!first) return
+
+  if (interactive) {
+    switch (first[0]) {
+      case 'whenKeyPressed': // bind key
+        ctx.player.onKey[getKeyCode(first[1])] = blocks
+        return
+    }
+  }
+
+  var thread = new Thread(blocks, ctx)
+  if (thread.step()) {
+    ctx.entity.threads.push(thread)
+  }
+}
+
+function tickEntity(entity) {
+  let threads = entity.threads
+  var survive = []
+  for (var i=0; i<threads.length; i++) {
+    var thread = threads[i]
+    if (thread.step()) {
+      survive.push(thread)
+    }
+  }
+  entity.threads = survive
+}
+
 module.exports = {
-  evaluate: evaluateSeq,
+  evaluate: evaluateInteractive,
+  tickEntity,
 }
 
 function choose(options) {
   return options[Math.floor(Math.random() * options.length)]
 }
+
+
+var KEY_CODES = {
+  'space': 32,
+  'left arrow': 37,
+  'up arrow': 38,
+  'right arrow': 39,
+  'down arrow': 40,
+  'any': 128
+};
+
+var getKeyCode = function(keyName) {
+  return KEY_CODES[keyName.toLowerCase()] || keyName.toUpperCase().charCodeAt(0);
+};
 

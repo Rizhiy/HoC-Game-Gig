@@ -61,6 +61,7 @@ function loadEmoji(cb) {
 }
 
 let images = {}
+var removed = {}
 
 function createDiv() {
   var img = document.createElement("div");
@@ -123,8 +124,8 @@ function setEmoji(img, name) {
 
   img.style.backgroundPosition = "-" + (72*x) + "px -" + (72*y) + "px";
   img.style.backgroundSize = "2304px 2304px";
-  
-  document.querySelector(".world").appendChild(img);
+
+  world.appendChild(img);
 }
 
 var messageboxes = {}
@@ -141,7 +142,7 @@ function addMessageBox(entid, msg) {
     div.style.zIndex = 1
     div.innerHTML = msg
     
-    document.querySelector(".world").appendChild(div)
+    world.appendChild(div)
     
     mbid += 1
     messageboxes[mbid] = {div, id: entid};
@@ -155,12 +156,54 @@ function addMessageBox(entid, msg) {
     die(mbid, div);
 }
 
+function updateWand(eid){
+    // Get mouse coords
+    var mouse_x = wandcoords[eid].x
+    var mouse_y = wandcoords[eid].y
+    
+    var w = container.offsetWidth
+    var h = container.offsetHeight
+    var cx = -byId[eid].x + w/2
+    var cy = -byId[eid].y + h/2
+    
+    mouse_x += cx
+    mouse_y += cy
+    
+    var wand = wands[eid]
+    
+    var rect = images[eid].getBoundingClientRect();
+    wand_x = (rect.right + rect.left)/2
+    wand_y = (rect.top + rect.bottom)/2
+
+    // Angle of wand relative to vertical axis of emoji
+    var angle = 90.0+(Math.atan2(mouse_y-wand_y,mouse_x-wand_x)*(180.0/Math.PI));
+
+    // Set the new position and rotation of wand
+    
+    // New position
+    parent_transform = images[eid].style.transform;
+    parent_rotation = parent_transform.match(/\.*rotate\(([\-0-9]+.[0-9]+)deg\)/)
+    parent_rotation = parent_rotation ? parseFloat(parent_rotation[1]) : 0;
+    new_angle = angle-parent_rotation;
+    
+    // New angle
+    var wand_offset = 36;
+    new_x = wand_offset*Math.sin(new_angle*(Math.PI/180.0));
+    new_y = -wand_offset*Math.cos(new_angle*(Math.PI/180.0));
+    
+    // Update transformation
+    wand.style.transform = `translate(${new_x}px, ${new_y}px) scale(0.5) rotate(${new_angle}deg)`
+}
+
 let byId = {}
+let wandcoords = {}
+let wands = {}
 function render(entities) {
     byId = {}
   let msgboxesById = {}
   for (var i=0; i<entities.length; i++) {
     let entity = entities[i]
+    if (removed[entity.id]) return
     byId[entity.id] = entity
   }
   
@@ -189,11 +232,18 @@ function render(entities) {
 	  var wand_y = Math.floor(wand_pos / 32);
 	  wand.style.backgroundPosition = "-" + (72*wand_x) + "px -" + (72*wand_y) + "px";
 	  wand.style.backgroundSize = "2304px 2304px";
+      
+      wands[id] = wand
 
 	  image.appendChild(wand);
     }
     setEmoji(image, entity.name)
     image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
+    image.style.opacity = entity.opacity
+    
+    if (wandcoords[id]){
+        updateWand(id)
+    }
     
     var msgs = msgboxesById[id]
     if(msgs){
@@ -208,8 +258,6 @@ function render(entities) {
     // TODO opacity
     // TODO visible
   }
-  
-  let world = document.querySelector(".world")
 
   let player = byId[playerid]
   if (player) {
@@ -219,7 +267,12 @@ function render(entities) {
     var cy = -player.y + h/2
     world.style.transform = `translate(${cx}px, ${cy}px)`
   }
-  // TODO remove dead entities
+}
+
+function updateWands(coords){
+    for(var i=0; i<coords.length; i++){
+        wandcoords[coords[i].id] = {x: coords[i].x, y: coords[i].y}
+    }
 }
 
 function choose(options) {
@@ -233,7 +286,8 @@ function doRender(){
   }
   updates = updates.slice(updates.length - 5)
 }
-
+  
+var world = document.querySelector(".world")
 var container = document.querySelector('.container')
 var updates = []
 function main(conn, emoji) {
@@ -251,6 +305,13 @@ function main(conn, emoji) {
       case 'messagebox':
         addMessageBox(json.id, json.message)
         break
+      case 'mousePos':
+        updateWands(json.coords)
+        break
+      case 'remove_entity':
+        removed[json.id] = true
+        world.removeChild(images[json.id])
+        delete images[json.id]
     }
   })
 
@@ -277,45 +338,6 @@ function sendKey(e){
 }
 window.addEventListener("keydown",sendKey);
 
-// Mouse event handler: Change orientation of wand to follow mouse
-function onWorldMouse(e){
-	
-	// Get mouse coords
-	var mouse_x = e.clientX
-	var mouse_y = e.clientY
-	
-	// Get 'wand' div elements
-	var wands = document.getElementsByClassName('wand')
-
-	// For each wand point it at mouse loc
-	for (var wand_idx=0; wand_idx < wands.length; wand_idx++) {
-
-		var rect = wands[wand_idx].parentElement.getBoundingClientRect();
-		wand_x = (rect.right + rect.left)/2
-		wand_y = (rect.top + rect.bottom)/2
-
-		// Angle of wand relative to vertical axis of emoji
-		var angle = 90.0+(Math.atan2(mouse_y-wand_y,mouse_x-wand_x)*(180.0/Math.PI));
-
-		// Set the new position and rotation of wand
-		
-		// New position
-		parent_transform = wands[wand_idx].parentElement.style.transform;
-		parent_rotation = parent_transform.match(/\.*rotate\(([\-0-9]+.[0-9]+)deg\)/)
-		parent_rotation = parent_rotation ? parseFloat(parent_rotation[1]) : 0;
-		new_angle = angle-parent_rotation;
-		
-		// New angle
-		var wand_offset = 36;
-		new_x = wand_offset*Math.sin(new_angle*(Math.PI/180.0));
-		new_y = -wand_offset*Math.cos(new_angle*(Math.PI/180.0));
-		
-		// Update transformation
-		wands[wand_idx].style.transform = `translate(${new_x}px, ${new_y}px) scale(0.5) rotate(${new_angle}deg)`
-	}
-}
-
-document.querySelector(".world").addEventListener("mousemove",onWorldMouse);
 
 function sendMouse(e) {
     e = e || window.event;
