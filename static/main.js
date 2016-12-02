@@ -130,9 +130,15 @@ var messageboxes = {}
 var mbid = 0;
 function addMessageBox(entid, msg) {
     var div = document.createElement("div")
-    div.style.borderRadius = "16px"
-    div.style.padding = "8px"
+    div.style.borderRadius = "32px"
+    div.style.backgroundColor = "beige"
+    div.style.fontSize = "3em"
+    div.style.padding = "16px"
+    div.style.position = "absolute"
+    div.style.transform = "translate(-50%, -100%)"
     div.style.visibility = "hidden"
+    div.style.zIndex = 1
+    div.innerHTML = msg
     
     document.querySelector(".world").appendChild(div)
     
@@ -142,8 +148,8 @@ function addMessageBox(entid, msg) {
     function die(id, div){
         setTimeout(function(){
             div.remove()
-            messageboxes[id] = null
-        , 1000})
+            delete messageboxes[id]
+        }, 3000)
     }
     die(mbid, div);
 }
@@ -156,12 +162,13 @@ function render(entities) {
     byId[entity.id] = entity
   }
   
-  for(var i=0; i<messageboxes.length; i++){
-    let msgbox = messageboxes[i]
-    if (!msgboxesById[msgbox.entid]){
-        msgboxesById[msgbox.entid] = []
+  let msgkeys = Object.keys(messageboxes)
+  for(var i=0; i<msgkeys.length; i++){
+    let msgbox = messageboxes[msgkeys[i]]
+    if (!msgboxesById[msgbox.id]){
+        msgboxesById[msgbox.id] = []
     }
-    msgboxesById[msgbox.entid].append(msgbox)
+    msgboxesById[msgbox.id].push(msgbox)
   }
 
   for (let id in byId) {
@@ -172,6 +179,17 @@ function render(entities) {
     }
     setEmoji(image, entity.name)
     image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
+    
+    var msgs = msgboxesById[id]
+    if(msgs){
+        for(var i=0; i<msgs.length; i++){
+            var msg = msgs[i]
+            msg.div.style.left = (entity.x + 36) + "px"
+            msg.div.style.top = entity.y + "px"
+            msg.div.style.visibility = "visible"
+        }
+    }
+    
     // TODO opacity
     // TODO visible
   }
