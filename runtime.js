@@ -273,9 +273,9 @@ function value(thing, ctx) {
       return ctx.spawned || ctx.entity
 
     case 'nearest':
-      let emoji = args[0]
-      // TODO find nearest emoji!
-      return ctx.this
+      entity = findClosest(ctx.entity.position.x, ctx.entity.position.y)
+      console.log(entity)
+      return entity
 
     case 'randomEmoji':
       return choose(emojiList)
