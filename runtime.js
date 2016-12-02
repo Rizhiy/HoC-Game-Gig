@@ -19,25 +19,27 @@ function evaluate(thing, ctx) {
       var [name] = values
       ctx.game.spawn(name, ctx.x, ctx.y)
       break
-
     case 'setEmoji':
       var [name] = values
       ctx.entity.name = name
       break
-
-    case 'setAngle':
-      var [entity, angle] = values
-      Matter.Body.setAngle(ctx.entity.body, Math.PI / 180 * angle)
-      break
-      
     case 'say':
       var [message] = values
       ctx.game.broadcast({ type: 'messagebox', id: ctx.entity.id, message })
       break
 
-    case 'rotate':
-      var [entity, angle] = values
+    case 'setAngle':
+      var [angle] = values
+      Matter.Body.setAngle(ctx.entity.body, Math.PI / 180 * angle)
+      break
+    case 'rotate': // TODO torque?!?!
+      var [angle] = values
       Matter.Body.rotate(ctx.entity.body, Math.PI / 180 * angle)
+      break
+
+    case 'setMass':
+      var [mass] = values
+      Matter.Body.setMass(ctx.entity.body, mass)
       break
 
     case 'gotoXY':
@@ -45,11 +47,12 @@ function evaluate(thing, ctx) {
       Matter.Body.setPosition(ctx.entity.body, {x, y})
       break
 
-    case 'nudgeXY':
-      var [x, y] = values
-      x /= 100
-      y /= -100
-      let body = ctx.entity.body
+    case 'forward':
+      var [amount] = values
+      var body = ctx.entity.body
+      var x = Math.sin(body.angle) / 100 * amount
+      var y = Math.cos(body.angle) / 100 * amount
+      console.log(x, y)
       Matter.Body.applyForce(body, body.position, {x, y})
       break
 
@@ -214,8 +217,11 @@ function value(thing, ctx) {
     case "rounded": return Math.round(num(args[0]))
     case "computeFunction:of:": return mathFunc(str(args[0]), num(args[1]))
 
-    case 'getEmoji':
-      return ctx.entity.name
+    case 'getEmoji': return ctx.entity.name
+    case 'getAngle': return ctx.entity.body.angle * 180 / Math.PI
+    case 'getX': return ctx.entity.body.position.x
+    case 'getY': return ctx.entity.body.position.y
+    case 'getMass': return ctx.entity.body.mass
 
     case 'nearest':
       let emoji = args[0]

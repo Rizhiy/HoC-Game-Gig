@@ -46,14 +46,16 @@ var Scratch = (function() {
     ["x position",							"r", 1, "getX"],
     ["y position",							"r", 1, "getY"],
     ["direction",							"r", 1, "getAngle"],
+    ["set mass to %n",			            " ", 1, "setMass",		0],
+    ["mass",							    "r", 1, "getMass"],
 
     // TODO mass, restitution, etc...
 
     // visuals
     ["set opacity to %n%",			        " ", 2, "setOpacity",		0],
-    ["change opacity by %n%",		        " ", 2, "changeOpacityBy",	10],
+    ["change opacity by %n%",		        " ", 2, "changeOpacity",	10],
     ["set size to %n%",						" ", 2, "setScale", 				100],
-    ["change size by %n",					" ", 2, "changeScaleBy",	 		10],
+    ["change size by %n",					" ", 2, "changeScale",	 		10],
     ["show",								" ", 2, "show"],
     ["hide",								" ", 2, "hide"],
     ["say %s",								" ", 2, "say",							"Hello!"],
@@ -124,9 +126,9 @@ var Scratch = (function() {
     ["rest for %n beats",					" ", 3, "rest:elapsed:from:",				0.25],
     ["play note %d.note for %n beats",		" ", 3, "noteOn:duration:elapsed:from:",	60, 0.5],
     ["set instrument to %d.instrument",		" ", 3, "instrument:",						1],
-    ["change volume by %n",					" ", 3, "changeVolumeBy:",					-10],
+    ["change volume by %n",					" ", 3, "changeVolume:",					-10],
     ["set volume to %n%",					" ", 3, "setVolumeTo:", 					100],
-    ["change tempo by %n",					" ", 3, "changeTempoBy:",					20],
+    ["change tempo by %n",					" ", 3, "changeTempo:",					20],
     ["set tempo to %n bpm",					" ", 3, "setTempoTo:",						60],
 
     // pen
@@ -135,11 +137,11 @@ var Scratch = (function() {
     ["pen down",							" ", 4, "putPenDown"],
     ["pen up",								" ", 4, "putPenUp"],
     ["set pen color to %c",					" ", 4, "penColor:"],
-    ["change pen color by %n",				" ", 4, "changePenHueBy:"],
+    ["change pen color by %n",				" ", 4, "changePenHue:"],
     ["set pen color to %n",					" ", 4, "setPenHueTo:", 		0],
-    ["change pen shade by %n",				" ", 4, "changePenShadeBy:"],
+    ["change pen shade by %n",				" ", 4, "changePenShade:"],
     ["set pen shade to %n",					" ", 4, "setPenShadeTo:",		50],
-    ["change pen size by %n",				" ", 4, "changePenSizeBy:",		1],
+    ["change pen size by %n",				" ", 4, "changePenSize:",		1],
     ["set pen size to %n",					" ", 4, "penSize:", 			1],
     */
 

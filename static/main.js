@@ -216,6 +216,7 @@ function doRender(){
 	if(update){
 		render(update)
 	}
+  console.log(updates.length)
 }
 
 var container = document.querySelector('.container')
