@@ -1,7 +1,7 @@
 
 const Matter = require('matter-js/build/matter.js')
 
-//const runtime = require('./runtime')
+const runtime = require('./runtime')
 
 
 
@@ -102,15 +102,15 @@ class Game {
 
   handle_code(id, json) {
     let player = this.players[id]
-    let code = json.code
+    let code = json.json
+    console.log(JSON.stringify(code))
 
-    console.log(json)
-
-    let body = player.entity.body
-    Matter.Body.applyForce(body, body.position, { x: 0.1, y: 0 })
-
-
-    // TODO
+    runtime.evaluate(code, {
+      me: player.entity,
+      game: this,
+      x: player.entity.body.position.x,
+      y: player.entity.body.position.y,
+    })
   }
 
   handle_keydown(id, json) {
@@ -155,6 +155,13 @@ class Game {
       out.push(entities[i].toJSON())
     }
     this.broadcast({ type: 'world', entities: out })
+  }
+
+  spawn(name, x, y) {
+    let entity = new Entity(name, x, y)
+    this.add(entity)
+    console.log(entity)
+    return entity
   }
 
 }

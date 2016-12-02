@@ -21,6 +21,7 @@ CodeMirror.defineMode("lately", function(cfg, modeCfg) {
 
       let start = this.index
       let end = this.index = start + tokens.length
+      console.log(start, end, line)
 
       try {
         completer.rewind(start)

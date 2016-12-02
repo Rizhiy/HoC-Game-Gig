@@ -12,7 +12,7 @@ blankLines --> NL NL
             | blankLines NL
 
 script --> stmt                   ${a => [a]}
-        | script NL stmt          ${(a, b, c) => a.concat(c)}
+        | script NLS stmt          ${(a, b, c) => a.concat(c)}
 
 stack => script                   ${a => a}
 stack => '...'                    ${a => ['nop']}
@@ -22,6 +22,9 @@ stmt => 'become' emoji            ${a => ['lookLike', a] }
 stmt => 'nudge right' int         ${a => ['nudgeRight', a] }
 
 stmt --> 'repeat' SEP int NL stack NL 'end'    ${function() { return ['repeat', arguments[7], arguments[9]] }}
+stmt --> 'forever' NL stack NL 'end'           ${function() { return ['forever', arguments[8]] }}
+
+stmt => 'when' 'I' 'press' key    ${a => ['whenPressed', a]}
 
 int --> digits                     ${a => parseInt(a)}
 digits --> digit                  ${a => ''+a}
@@ -37,7 +40,15 @@ digit --> '0' ${a => '0'}
         | '8' ${a => '8'}
         | '9' ${a => '9'}
 
-NL --> '\n'
+key --> 'space' ${a => 32}
+key --> 'up' ${a => 38}
+key --> 'down' ${a => 40}
+key --> 'left' ${a => 37}
+key --> 'right' ${a => 39}
+
+NL --> ' ' NL
+     | NL ' '
+     | '\n'
 SEP --> ' '
       | NL
 
@@ -59,9 +70,8 @@ function hm(d) {
 var highlightMap = hm({
   stmt: 'keyword',
   emoji: 'atom',
+  key: 'string',
   int: 'number',
-
-  //cheese: 'string',
 })
 
 var cmOptions = {
@@ -128,7 +138,7 @@ editor.on('keydown', (cm, e) => {
     conn.send({
       type: 'code',
       text,
-      json,
+      json: json[0],
     })
 
     cm.setValue("")
