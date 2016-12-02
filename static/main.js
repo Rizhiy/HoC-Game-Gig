@@ -105,8 +105,8 @@ function render(entities) {
 	  
 		let world = document.querySelector(".world")
 
-		world.style.left = byId[playerid].x
-		world.style.top = byId[playerid].y
+		world.style.left = -byId[playerid].x + "px"
+		world.style.top = -byId[playerid].y + "px"
 	}
   // TODO remove dead entities
 }
@@ -133,6 +133,7 @@ function main(conn, emoji) {
         updates.push(json.entities)
         break
       case 'player_id':
+		console.log("I AM " + json.id)
         playerid = json.id
     }
   })
