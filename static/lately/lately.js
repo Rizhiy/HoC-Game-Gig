@@ -618,7 +618,10 @@
 
     complete(index, right) {
       // check there's no syntax error before the cursor
-      if (this.leftParser.columns.length <= index) return
+      if (this.leftParser.columns.length <= index) {
+        console.log('possible syntax error')
+        return
+      }
 
       // TODO it's possible we want to decrement index until we find column.unique[0]
 

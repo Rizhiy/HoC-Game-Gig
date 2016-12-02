@@ -180,6 +180,9 @@ body {
 
   overflow: hidden;
 }
+.CodeMirror-hints {
+  z-index: 201;
+}
 
 .CodeMirror-cursors {
   visibility: hidden !important;

@@ -59,13 +59,6 @@ function loadEmoji(cb) {
     xhr.send();
 }
 
-window.addEventListener("load", () => {
-  let conn = new Connection()
-  conn.opened = () => {
-    loadEmoji(emoji => main(conn, emoji))
-  }
-})
-
 let images = {}
 
 function createDiv() {

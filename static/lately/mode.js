@@ -133,6 +133,7 @@ CodeMirror.defineMode("lately", function(cfg, modeCfg) {
     editor.getDoc().iter(0, cur.line, line => {
       index += line.text.length + 1 // +1 for '\n'
     })
+    index++ // \n??
     let lineIndex = index
 
     // require a non-blank line
@@ -149,7 +150,10 @@ CodeMirror.defineMode("lately", function(cfg, modeCfg) {
     let after = value.slice(index)
 
     let suggest = completer.complete(index, after)
-    if (!suggest) return
+    if (!suggest) {
+      console.log('no suggestions')
+      return
+    }
 
     suggest.forEach(c => {
       // offset by start-of-line
