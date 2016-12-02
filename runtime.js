@@ -17,7 +17,7 @@ function evaluate(thing, ctx) {
   switch (selector) {
     case 'spawnEntity':
       var [name] = args
-      ctx.spawned = ctx.game.spawn(name, ctx.x, ctx.y)
+      ctx.spawned = ctx.game.spawn(name, body.position.x, body.position.y)
       break
     case 'removeEntity':
       ctx.game.remove(ctx.entity.id)

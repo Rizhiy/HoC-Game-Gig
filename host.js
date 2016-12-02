@@ -31,8 +31,6 @@ class Player {
       player: player,
       entity: player.entity,
       game: this.game,
-      x: player.entity.body.position.x,
-      y: player.entity.body.position.y,
       mouseX: player.mouseX,
       mouseY: player.mouseY
     }, interactive)
