@@ -233,7 +233,6 @@ function main(conn, emoji) {
         playerid = json.id
         break
       case 'messagebox':
-        console.log("messagebox: " + json.message)
         addMessageBox(json.id, json.message)
         break
     }
