@@ -36,8 +36,9 @@ strong {
 }
 
 .world{
-	height: 4000px;
-	width: 2000px;
+	height: 2000px;
+	width: 4000px;
+	transform: translate(-2000px, -1000px);
 }
 
 /*****************************************************************************/

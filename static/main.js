@@ -89,25 +89,29 @@ function render(entities) {
     byId[entity.id] = entity
   }
 
-	if(playerid && byId[playerid]){
+  for (let id in byId) {
+    var entity = byId[id]
+    var image = images[id]
+    if (!image) {
+      images[id] = image = createDiv()
+    }
+    setEmoji(image, entity.name)
+    image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
+    // TODO opacity
+    // TODO visible
+  }
+  
+  let world = document.querySelector(".world")
 
-	  for (let id in byId) {
-		var entity = byId[id]
-		var image = images[id]
-		if (!image) {
-		  images[id] = image = createDiv()
-		}
-		setEmoji(image, entity.name)
-		image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
-		// TODO opacity
-		// TODO visible
-	  }
-	  
-		let world = document.querySelector(".world")
-
-		world.style.left = -byId[playerid].x + "px"
-		world.style.top = -byId[playerid].y + "px"
-	}
+  let player = byId[playerid]
+  if (player) {
+    console.log(player)
+    var w = container.offsetWidth
+    var h = container.offsetHeight
+    var cx = -player.x + w/2
+    var cy = -player.y + h/2
+    world.style.transform = `translate(${cx}px, ${cy}px)`
+  }
   // TODO remove dead entities
 }
 
@@ -122,6 +126,7 @@ function doRender(){
 	}
 }
 
+var container = document.querySelector('.container')
 var updates = []
 function main(conn, emoji) {
   window.conn = conn
@@ -138,8 +143,6 @@ function main(conn, emoji) {
     }
   })
 
-  // document.querySelector('.container').offsetWidth
-
   conn.send({ type: 'spawn', name: choose(emojiNames) })
   
   let fps = 25;
@@ -149,7 +152,7 @@ function main(conn, emoji) {
 
 function sendKey(e){
     e = e || window.event;
-    window.conn.send({type:'keyPressed',keyCode: e.keyCode})
+    window.conn.send({type:'keydown',keyCode: e.keyCode})
 }
 window.addEventListener("keydown",sendKey);
 
