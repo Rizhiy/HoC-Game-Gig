@@ -68,12 +68,12 @@ function evaluate(thing, ctx) {
       var [mass] = args
       Matter.Body.setMass(body, mass)
       break
-      
+
       case 'setRestitution':
           var [rest] = args
           body.restitution = rest/100
           break
-      
+
       case 'setFriction':
         var [fric] = args
         body.friction = fric/100
@@ -265,25 +265,23 @@ function value(thing, ctx) {
     case 'getMass': return ctx.entity.body.mass
     case 'getRestitution': return ctx.entity.body.restitution
     case 'getFriction': return ctx.entity.body.friction
-    
+
     case "mouseX": return ctx.mouseX
     case "mouseY": return ctx.mouseY
 
     case 'spawned':
-      return ctx.spawned || ctx.entity
+      return ctx.spawned
 
     case 'nearestEntity':
       entity = findClosest(ctx.game, ctx.entity, null)
-      return entity || ctx.entity
+      return entity
     case 'nearestEntityKind':
       entity = findClosest(ctx.game, ctx.entity, args[0])
-      console.log(entity)
-      return entity || ctx.entity
+      return entity
     case 'targetEntity':
       entity = findClosestToPoint(ctx.game, ctx.mouseX - 32, ctx.mouseY - 32)
-      console.log(entity)
-      console.log(ctx.mouseX, ctx.mouseY, entity.body.position)
-      return entity || ctx.entity
+      //console.log(ctx.mouseX, ctx.mouseY, entity.body.position)
+      return entity
 
 
     case 'randomEmoji':
@@ -337,9 +335,11 @@ class Thread {
           ctx = Object.assign({}, ctx, {
             entity: value(args[0], ctx),
           })
-          let subThread = new Thread(args[1], ctx)
-          subThread.step()
-          ctx.entity.threads.push(subThread)
+          if (ctx.entity) {
+            let subThread = new Thread(args[1], ctx)
+            subThread.step()
+            ctx.entity.threads.push(subThread)
+          }
           frame.index++
           break
         case 'doIf':
