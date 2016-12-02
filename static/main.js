@@ -59,16 +59,6 @@ function loadEmoji(cb) {
     xhr.send();
 }
 
-window.addEventListener("load", () => {
-	loadEmoji(emoji => {
-		let conn = new Connection()
-		conn.opened = () => {
-			main(conn, emoji)
-		}
-	});
-})
-
-
 let images = {}
 
 function createDiv() {
@@ -133,6 +123,8 @@ function main(conn, emoji) {
       case 'world':
         updates.push(json.entities)
         break
+      case 'player_id':
+        console.log("I am", json.id)
     }
   })
 
@@ -143,4 +135,15 @@ function main(conn, emoji) {
   let fps = 25;
   window.setInterval(doRender, 1000.0 / fps);
 }
+
+
+
+window.addEventListener("load", () => {
+	loadEmoji(emoji => {
+		let conn = new Connection()
+		conn.opened = () => {
+			main(conn, emoji)
+		}
+	});
+})
 
