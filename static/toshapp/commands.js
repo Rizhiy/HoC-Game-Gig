@@ -2,7 +2,7 @@ var Scratch = (function() {
 
   var scratchCommands = [
 
-    ["with %m.spriteOrMouse",				"c", 6, "with:", "myself"],
+    ["with %m.spriteOnly",				"c", 6, "with:", "myself"],
 
     // entities
     ["spawn %m.emoji",					    " ", 3, "spawnEntity"],

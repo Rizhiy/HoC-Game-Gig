@@ -193,7 +193,7 @@ function bool(x) {
 function value(thing, ctx) {
   if (!(thing && thing.constructor === Array)) {
     if (thing === '_myself_') {
-      return ctx.me
+      return ctx.player
     } else if (thing === '_mouse_') {
       // TODO mouse pointer
     }
@@ -251,15 +251,80 @@ function value(thing, ctx) {
   }
 }
 
-function evaluateSeq(things, ctx) {
-  let length = things.length
-  for (var i=0; i<length; i++) {
-    evaluate(things[i], ctx)
+
+class Frame {
+  constructor(blocks, ctx, yieldAtEnd = false) {
+    this.blocks = blocks
+    this.index = 0
+    this.ctx = ctx
+    this.yieldAtEnd = yieldAtEnd
   }
 }
 
+class Thread {
+  constructor(blocks, ctx) {
+    this.stack = [new Frame(blocks, ctx)]
+  }
+
+  step() {
+    let stack = this.stack
+    while (true) {
+      var frame = stack[stack.length - 1]
+      if (!frame) {
+        return false
+      }
+
+      var block = frame.blocks[frame.index]
+      if (!block) {
+        stack.pop()
+        continue
+      }
+      var ctx = frame.ctx
+
+      var selector = block[0]
+      var args = block.slice(1)
+      switch (selector) {
+        case 'whenKeyPressed':
+          // TODO
+          console.log(ctx.player)
+          break
+        case 'with':
+          stack.push(new Frame(args[1], value(args[0], ctx)))
+          break
+        case 'doIf':
+          var cond = value(args[0], ctx)
+          if (cond) {
+            stack.push(new Frame(args[1], ctx))
+          } else if (!cond && args[2]) {
+            stack.push(new Frame(args[2], ctx))
+          }
+          this.index++
+          break
+        case 'forever':
+          stack.push(new Frame(args[1], ctx, true))
+          break
+        default:
+          evaluate(block, ctx)
+          this.index++
+      }
+    }
+    return true // don't destroy me
+  }
+}
+
+
+function evaluateInteractive(blocks, ctx) {
+  var thread = new Thread(blocks, ctx)
+  while (thread.step()) {}
+}
+
+function tickEntity(entity) {
+
+}
+
 module.exports = {
-  evaluate: evaluateSeq,
+  evaluate: evaluateInteractive,
+  tickEntity,
 }
 
 function choose(options) {

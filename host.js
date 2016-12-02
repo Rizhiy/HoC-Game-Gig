@@ -28,6 +28,8 @@ class Entity {
     this.name = name
     this.body = Matter.Bodies.circle(x, y, Entity.RADIUS)
     this.id = this.body.id
+
+    this.threads = []
   }
 
   toJSON() {
@@ -131,7 +133,7 @@ class Game {
     console.log(JSON.stringify(code))
 
     runtime.evaluate(code, {
-      me: player.entity,
+      player: player.entity,
       entity: player.entity,
       game: this,
       x: player.entity.body.position.x,
