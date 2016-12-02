@@ -55,10 +55,22 @@ var server = http.createServer(function(request, response) {
       }
     }
     else {
+      var cacheControl;
+      switch(contentType){
+        case "image/png":
+          case "image/jpg":
+            cacheControl = 'max-age=31536000';
+            break;
+          case "text/javascript":
+            cacheControl = 'max-age=0';
+            break;
+          default:
+            cacheControl = 'max-age=3600'
+      }
       response.writeHead(200, {
         'Content-Type': contentType,
         'Content-Length': content.length,
-        'Cache-Control': 'max-age=31536000',
+        'Cache-Control': cacheControl,
       })
       response.end(content, 'utf-8')
     }
