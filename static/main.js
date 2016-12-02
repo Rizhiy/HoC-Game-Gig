@@ -341,16 +341,18 @@ window.addEventListener("keydown",sendKey);
 function sendMouse(e) {
     e = e || window.event;
     
-    var player = byId[playerid]
-    if(player){
-        var w = container.offsetWidth
-        var h = container.offsetHeight
-        var cx = -player.x + w/2
-        var cy = -player.y + h/2
-        
-        var wx = e.clientX - cx
-        var wy = e.clientY - cy
-        window.conn.send({type:'mouseMove',position:{x:wx,y:wy}})
+    if(playerid){
+        var player = byId[playerid]
+        if(player){
+            var w = container.offsetWidth
+            var h = container.offsetHeight
+            var cx = -player.x + w/2
+            var cy = -player.y + h/2
+            
+            var wx = e.clientX - cx
+            var wy = e.clientY - cy
+            window.conn.send({type:'mouseMove',position:{x:wx,y:wy}})
+        }
     }
 }
 
