@@ -117,9 +117,9 @@ class Game {
 
   /* main loop */
 
-  tick() {
-
+  tick(fps) {
     // TODO sync entity values to/from Matter.js ???
+      game.engine.update(1000/fps)
   }
   
 }
