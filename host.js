@@ -57,10 +57,11 @@ class Game {
     this.engine = Matter.Engine.create();
     this.width = 4000;
     this.height = 2000;
+      var sky = Matter.Bodies.readAsDataURL(0,-this.height/2,this.width,100,{isStatic:true})
       var ground = Matter.Bodies.rectangle(0, this.height/2, this.width, 100, { isStatic: true })
       var right = Matter.Bodies.rectangle(this.width/2,0,100,this.height,{isStatic:true})
       var left = Matter.Bodies.rectangle(-this.width/2,0,100,this.height,{isStatic:true})
-      Matter.World.add(this.engine.world,[ground,right,left]);
+      Matter.World.add(this.engine.world,[sky,ground,right,left]);
   }
 
 
