@@ -106,8 +106,11 @@ function render(entities) {
   let player = byId[playerid]
   if (player) {
     console.log(player)
-    world.style.left = -player.x + "px"
-    world.style.top = -player.y + "px"
+    var w = container.offsetWidth
+    var h = container.offsetHeight
+    var cx = -player.x + w/2
+    var cy = -player.y + h/2
+    world.style.transform = `translate(${cx}px, ${cy}px)`
   }
   // TODO remove dead entities
 }
@@ -123,6 +126,7 @@ function doRender(){
 	}
 }
 
+var container = document.querySelector('.container')
 var updates = []
 var playerid;
 function main(conn, emoji) {
@@ -139,8 +143,6 @@ function main(conn, emoji) {
         break
     }
   })
-
-  // document.querySelector('.container').offsetWidth
 
   conn.send({ type: 'spawn', name: choose(emojiNames) })
   
