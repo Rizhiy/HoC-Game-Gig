@@ -69,7 +69,8 @@ class Game {
   /* players */
 
   player(playerId, send) {
-    this.players[playerId] = new Player(this, playerId, send)
+    let player = this.players[playerId] = new Player(this, playerId, send)
+    this.send(player.id, { type: 'player_id', id: player.id })
   }
 
   removePlayer(playerId) {

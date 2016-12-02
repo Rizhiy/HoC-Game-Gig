@@ -66,7 +66,6 @@ window.addEventListener("load", () => {
   }
 })
 
-
 let images = {}
 
 function createDiv() {
@@ -133,6 +132,8 @@ function main(conn, emoji) {
       case 'world':
         updates.push(json.entities)
         break
+      case 'player_id':
+        console.log("I am", json.id)
     }
   })
 
@@ -144,4 +145,15 @@ function main(conn, emoji) {
   window.setInterval(doRender, 1000.0 / fps);
 
 }
+
+
+
+window.addEventListener("load", () => {
+	loadEmoji(emoji => {
+		let conn = new Connection()
+		conn.opened = () => {
+			main(conn, emoji)
+		}
+	});
+})
 
