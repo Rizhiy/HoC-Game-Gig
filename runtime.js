@@ -26,7 +26,6 @@ function evaluate(thing, ctx) {
 
     case 'setAngle':
       var [entity, angle] = values
-      console.log(entity.body)
       Matter.Body.setAngle(ctx.entity.body, Math.PI / 180 * angle)
       break
       
