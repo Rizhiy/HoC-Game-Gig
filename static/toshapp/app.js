@@ -719,17 +719,6 @@ function computeHint(cm, please) {
   return result;
 };
 
-function submit() {
-  console.log('yo')
-  debugger
-  // TODO
-  conn.send({
-    type: 'code',
-    text,
-    json: json[0],
-  })
-}
-
 var editor = new ScriptsEditor()
 window.addEventListener('resize', e => {
   editor.fixLayout()
@@ -744,6 +733,7 @@ editor.cm.on('keydown', (cm, e) => {
     if (!scripts) {
       return
     }
+    if (!scripts || !scripts.length) return
 
     conn.send({
       type: 'code',
