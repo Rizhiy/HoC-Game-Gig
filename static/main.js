@@ -106,6 +106,9 @@ function render(entities) {
   // TODO remove dead entities
 }
 
+function choose(options) {
+  return options[Math.floor(Math.random() * options.length)]
+}
 
 function main(conn, emoji) {
   window.conn = conn
@@ -118,7 +121,7 @@ function main(conn, emoji) {
     }
   })
 
-  conn.send({ type: 'spawn', name: 'pile of poo' })
+  conn.send({ type: 'spawn', name: choose(emojiNames) })
 
 }
 

@@ -9,9 +9,8 @@ class Player {
     this.send = send
   }
 
-  place(json) {
-    let { emoji } = json
-    this.entity = new Entity(emoji, 0, 0)
+  place(name, x = 0, y = 0) {
+    this.entity = new Entity(name, x, y)
     this.game.add(this.entity)
   }
 
@@ -22,7 +21,7 @@ class Player {
 
 
 class Entity {
-  constructor(name = '', x = 0, y = 0, rot = 0, scale = 1, opacity = 1, mass = 1) {
+  constructor(name, x = 0, y = 0, rot = 0, scale = 1, opacity = 1, mass = 1) {
     this.id = ++Entity.highestId
     this.name = name
     this.x = x

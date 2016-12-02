@@ -1023,3 +1023,4 @@ var emojiNames = [
 'yin yang',
 'zipper-mouth face',
 ]
+if (typeof module !== 'undefined') module.exports = emojiNames
