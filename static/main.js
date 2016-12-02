@@ -238,6 +238,11 @@ function main(conn, emoji) {
     }
   })
 
+  conn.closed(() => {
+    console.log('closed!')
+    document.body.innerHTML = ''
+  })
+
   conn.send({ type: 'spawn', name: choose(emojiNames) });
 
     document.querySelector(".world").appendChild(addGround());

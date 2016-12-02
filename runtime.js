@@ -1,6 +1,7 @@
 
 const Matter = require('matter-js/build/matter.js')
 
+const emojiList = require('./static/emoji-list.js')
 
 
 function evaluate(thing, ctx) {
@@ -198,6 +199,7 @@ function value(thing, ctx) {
     case '-':  return num(args[0]) - num(args[1])
     case '*':  return num(args[0]) * num(args[1])
     case '/':  return num(args[0]) / num(args[1])
+<<<<<<< HEAD
     case "randomFrom:to:":
         return random(num(args[0]), num(args[1]))
     case "<": return compare(args[0], args[1]) === -1
@@ -212,10 +214,17 @@ function value(thing, ctx) {
     case "%": return mod(num(args[0]), num(args[1]))
     case "rounded": return Math.round(num(args[0]))
     case "computeFunction:of:": return mathFunc(str(args[0]), num(args[1]))
+
+    case 'getEmoji':
+      return ctx.entity.name
+
     case 'nearest':
       let emoji = args[0]
       // TODO find nearest emoji!
       return ctx.this
+
+    case 'randomEmoji':
+      return choose(emojiList)
 
     default:
       console.log('unknown selector', selector, JSON.stringify(args))
@@ -231,5 +240,9 @@ function evaluateSeq(things, ctx) {
 
 module.exports = {
   evaluate: evaluateSeq,
+}
+
+function choose(options) {
+  return options[Math.floor(Math.random() * options.length)]
 }
 

@@ -1,4 +1,6 @@
 
+let Pos = CodeMirror.Pos
+
 function div(className, text) {
   var el = document.createElement('div')
   el.className = className

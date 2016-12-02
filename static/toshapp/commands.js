@@ -60,6 +60,7 @@ var Scratch = (function() {
     ["set emoji to %m.emoji",		        " ", 2, "setEmoji",				"pile of poo"],
     ["emoji",							    "r", 2, "getEmoji"],
     ["size",								"r", 2, "getScale"],
+    ["random emoji",                 "r", 2, "randomEmoji"],
 
     // events
     ["when I press %m.key",				    "h", 5, "whenKeyPressed", 		"space"],
