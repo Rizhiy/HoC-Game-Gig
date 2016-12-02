@@ -71,10 +71,11 @@ function createDiv() {
   img.style.width = "72px";
   img.style.height = "72px";
   img.style.background = "url(" + emoji + ")";
+  img.style.position = "absolute"
   return img
 }
 
-function setEmoji(image, name) {
+function setEmoji(img, name) {
   var pos = emojiNames.indexOf(name);
   var x = pos % 32;
   var y = Math.floor(pos / 32);
@@ -93,13 +94,13 @@ function render(entities) {
   }
 
   for (let id in byId) {
-    var entity = entities[id]
+    var entity = byId[id]
     var image = images[id]
     if (!image) {
       images[id] = image = createDiv()
     }
     setEmoji(image, entity.name)
-    image.transform = `translate({entity.x}px {entity.y}px) scale({entity.scale})`
+    image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale})`
   }
 
   // TODO remove dead entities
