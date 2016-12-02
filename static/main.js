@@ -52,7 +52,7 @@ function loadEmoji(cb) {
 
     xhr.addEventListener("progress", function(p){
         var el = document.getElementById("loadingbar")
-        el.style.width = (100 * p.loaded / p.total) + "%";
+		el.style.width = (100 * p.loaded / p.total) + "%";
     });
 
     xhr.open("GET", "emoji.png");
@@ -89,19 +89,25 @@ function render(entities) {
     byId[entity.id] = entity
   }
 
-  for (let id in byId) {
-    var entity = byId[id]
-    var image = images[id]
-    if (!image) {
-      images[id] = image = createDiv()
-    }
-    setEmoji(image, entity.name)
-    image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
-    // TODO opacity
-    // TODO visible
-  }
+	if(playerid && byId[playerid]){
 
-  
+	  for (let id in byId) {
+		var entity = byId[id]
+		var image = images[id]
+		if (!image) {
+		  images[id] = image = createDiv()
+		}
+		setEmoji(image, entity.name)
+		image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
+		// TODO opacity
+		// TODO visible
+	  }
+	  
+		let world = document.querySelector(".world")
+
+		world.style.left = byId[playerid].x
+		world.style.top = byId[playerid].y
+	}
   // TODO remove dead entities
 }
 
@@ -138,15 +144,4 @@ function main(conn, emoji) {
   window.setInterval(doRender, 1000.0 / fps);
 
 }
-
-
-
-window.addEventListener("load", () => {
-	loadEmoji(emoji => {
-		let conn = new Connection()
-		conn.opened = () => {
-			main(conn, emoji)
-		}
-	});
-})
 
