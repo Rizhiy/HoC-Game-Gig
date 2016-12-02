@@ -115,18 +115,28 @@ function choose(options) {
   return options[Math.floor(Math.random() * options.length)]
 }
 
+function doRender(){
+	var update = updates.shift()
+	if(update){
+		render(update)
+	}
+}
+
+var updates = []
 function main(conn, emoji) {
   window.conn = conn
 
   conn.on(json => {
     switch (json.type) {
       case 'world':
-        render(json.entities)
+        updates.push(json.entities)
         break
     }
   })
 
   conn.send({ type: 'spawn', name: choose(emojiNames) })
-
+  
+  let fps = 25;
+  window.setInterval(doRender, 1000.0 / fps);
 }
 
