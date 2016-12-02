@@ -70,6 +70,49 @@ function createDiv() {
   return img
 }
 
+function addGround(){
+    var ground = document.createElement("div");
+    ground.style.width = "4000px";
+    ground.style.height = "100px";
+    ground.style.backgroundColor = "black";
+    ground.style.position = "absolute";
+    ground.style.top = "2000px";
+    ground.style.left = "0px";
+    return ground
+}
+
+function addSky(){
+    var sky = document.createElement("div");
+    sky.style.width = "4000px";
+    sky.style.height = "100px";
+    sky.style.backskyColor = "blue";
+    sky.style.position = "absolute";
+    sky.style.top = "0px";
+    sky.style.left = "0px";
+    return sky
+}
+
+function addLeft(){
+    var left = document.createElement("div");
+    left.style.width = "100px";
+    left.style.height = "2000px";
+    left.style.backgroundColor = "grey";
+    left.style.position = "absolute";
+    left.style.top = "0px";
+    left.style.left = "0px";
+    return left;
+}
+
+function addRight(){
+    var right = document.createElement("div");
+    right.style.width = "100px";
+    right.style.height = "2000px";
+    right.style.backgroundColor = "grey";
+    right.style.position = "absolute";
+    right.style.top = "0px";
+    right.style.right = "0px";
+    return right;
+}
 
 function setEmoji(img, name) {
   var pos = emojiNames.indexOf(name);
@@ -143,8 +186,13 @@ function main(conn, emoji) {
     }
   })
 
-  conn.send({ type: 'spawn', name: choose(emojiNames) })
-  
+  conn.send({ type: 'spawn', name: choose(emojiNames) });
+
+    document.querySelector(".world").appendChild(addGround());
+    document.querySelector(".world").appendChild(addSky());
+    document.querySelector(".world").appendChild(addLeft());
+    document.querySelector(".world").appendChild(addRight());
+
   let fps = 25;
   window.setInterval(doRender, 1000.0 / fps);
 
