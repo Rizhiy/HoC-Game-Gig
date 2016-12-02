@@ -107,7 +107,7 @@ class Game {
     console.log(json)
 
     let body = player.entity.body
-    Matter.Body.applyForce(body, body.position, { x: 10, y: 0 })
+    Matter.Body.applyForce(body, body.position, { x: 0.1, y: 0 })
 
 
     // TODO

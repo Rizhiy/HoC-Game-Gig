@@ -11,17 +11,42 @@ file --> NL file                  ${(a, b) => b}
 blankLines --> NL NL
             | blankLines NL
 
-script --> stmt                    ${a => [a]}
+script --> stmt                   ${a => [a]}
         | script NL stmt          ${(a, b, c) => a.concat(c)}
 
-stmt => 'hello' 'world'
-      | 'duck' 'face'
+stack => script                   ${a => a}
+stack => '...'                    ${a => ['nop']}
+
+stmt => 'spawn' emoji             ${a => ['spawn', a] }
+stmt => 'become' emoji            ${a => ['lookLike', a] }
+stmt => 'nudge right' int         ${a => ['nudgeRight', a] }
+
+stmt --> 'repeat' SEP int NL stack NL 'end'    ${function() { return ['repeat', arguments[7], arguments[9]] }}
+
+int --> digits                     ${a => parseInt(a)}
+digits --> digit                  ${a => ''+a}
+      | digits digit              ${(a, b) => a + (''+b)}
+digit --> '0' ${a => '0'}
+        | '1' ${a => '1'}
+        | '2' ${a => '2'}
+        | '3' ${a => '3'}
+        | '4' ${a => '4'}
+        | '5' ${a => '5'}
+        | '6' ${a => '6'}
+        | '7' ${a => '7'}
+        | '8' ${a => '8'}
+        | '9' ${a => '9'}
 
 NL --> '\n'
 SEP --> ' '
       | NL
 
 `
+
+emojiNames.forEach(name => {
+  let symbols = Array.from(name).map(x => x === ' ' ? Lately.Token.SEP : x)
+  myDslGrammar.add(new Lately.Rule(Symbol.for('emoji'), symbols, function() { return ['emoji', name] }))
+})
 
 function hm(d) {
   let q = {}
@@ -32,10 +57,11 @@ function hm(d) {
 }
 
 var highlightMap = hm({
-  cheese: 'string',
   stmt: 'keyword',
-  thing2: 'atom',
-  op: 'number',
+  emoji: 'atom',
+  int: 'number',
+
+  //cheese: 'string',
 })
 
 var cmOptions = {
@@ -86,11 +112,23 @@ editor.on('change', CodeMirror.commands.autocomplete)
 
 editor.on('keydown', (cm, e) => {
   if (e.keyCode === 13 && (e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) {
-    let code = cm.getValue()
+    let text = cm.getValue()
+
+    let completer = cm.getMode()._completer
+    completer.rewind(0)
+    let error = completer.feed(text)
+    if (error) {
+      // TODO mark error
+      console.error(error)
+      return
+    }
+    let json = completer.parse()
+    console.log(JSON.stringify(json))
 
     conn.send({
       type: 'code',
-      code: code,
+      text,
+      json,
     })
 
     cm.setValue("")

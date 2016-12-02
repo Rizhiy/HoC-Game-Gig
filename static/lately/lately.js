@@ -673,17 +673,17 @@
         }
       }
 
-      console.table(completions.map(function(s) {
-        return {
-          target: s.rule.target,
-          start: s.start,
-          pre: s.pre.map(x => x.toString()).join(" "),
-          completion: s.completion.map(x => x.toString()).join(" "),
-          post: s.post.map(x => x.toString()).join(" "),
-          end: s.end,
-          build: s.rule.build,
-        }
-      }))
+      // console.table(completions.map(function(s) {
+      //   return {
+      //     target: s.rule.target,
+      //     start: s.start,
+      //     pre: s.pre.map(x => x.toString()).join(" "),
+      //     completion: s.completion.map(x => x.toString()).join(" "),
+      //     post: s.post.map(x => x.toString()).join(" "),
+      //     end: s.end,
+      //     build: s.rule.build,
+      //   }
+      // }))
 
       return completions
     }

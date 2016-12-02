@@ -149,7 +149,6 @@ function render(entities) {
 
   let player = byId[playerid]
   if (player) {
-    console.log(player)
     var w = container.offsetWidth
     var h = container.offsetHeight
     var cx = -player.x + w/2

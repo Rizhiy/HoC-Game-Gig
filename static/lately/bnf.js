@@ -36,6 +36,21 @@
     return eval('(function(' + args + ') { return build(' + nosep + '); })')
   }
 
+  function deSep2(indexes, length, func) {
+    var args = []
+    var nosep = []
+    for (var i=0; i<length; i++) {
+      let name = 't' + i
+      args.push(name)
+      if (indexes.indexOf(i) !== -1) nosep.push(name)
+    }
+    args = args.join(', ')
+    nosep = nosep.join(', ')
+
+    if (typeof func !== 'function') throw 'not a function'
+    var build = func
+    return eval('(function(' + args + ') { return build(' + nosep + '); })')
+  }
 
   function parseStream(getChar) {
     var index = 0
@@ -85,6 +100,7 @@
 
       let rules = []
       var symbols = []
+      var args = []
       var build
       while (tok) {
         while (tok !== '\n') {
@@ -108,6 +124,7 @@
               symbols.push(pRegex())
               break
             default:
+              args.push(symbols.length)
               symbols.push(pSymbol())
           }
           pWS()
@@ -117,7 +134,7 @@
         // TODO ebnf
 
         if (useSep && build) {
-          build = deSep(symbols.length, build)
+          build = deSep2(args, symbols.length, build)
         }
         rules.push(new Rule(target, symbols, build))
 
