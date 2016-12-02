@@ -372,3 +372,22 @@ var getKeyCode = function(keyName) {
   return KEY_CODES[keyName.toLowerCase()] || keyName.toUpperCase().charCodeAt(0);
 };
 
+function findClosest(x,y){
+    var closest = null;
+    var smallestDistance = null;
+    Game.entities.forEach(function(entity){
+            var dx = x - entity.body.position.x;
+            var dy = y - entity.body.position.y;
+            var distance = Math.sqrt(dx*dx + dy*dy);
+            if(!closest) {
+                closest = entity;
+                smallestDistance = distance;
+            }
+            if(distance < smallestDistance){
+                closest = entity;
+                smallestDistance = distance;
+            }
+        }
+    );
+    return closest;
+}
