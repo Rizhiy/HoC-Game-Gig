@@ -133,16 +133,19 @@ CodeMirror.defineMode("lately", function(cfg, modeCfg) {
     editor.getDoc().iter(0, cur.line, line => {
       index += line.text.length + 1 // +1 for '\n'
     })
-    index++ // \n??
     let lineIndex = index
+
+    // TODO \n ?!?!?!
 
     // require a non-blank line
     if (cur.ch === 0) return
 
     // feed the current line up to the cursor
     let line = editor.getLine(cur.line)
-    completer.rewind(index)
+    completer.rewind(index - 1)
+    completer.feed('\n')
     completer.feed(line.slice(0, cur.ch))
+    console.log(completer.leftParser.tokens)
     index += cur.ch
 
     // retrieve the entire rest of the document
