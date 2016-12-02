@@ -75,15 +75,15 @@ function evaluate(thing, ctx) {
 
     case 'forward':
       var [amount] = args
-      var x = Math.sin(body.angle) / 100 * amount
-      var y = Math.cos(body.angle) / 100 * amount
+      var x = -Math.cos(body.angle) / 100 * amount
+      var y = -Math.sin(body.angle) / 100 * amount
       Matter.Body.applyForce(body, body.position, {x, y})
       break
     case 'impulseX':
       Matter.Body.applyForce(body, body.position, {x: args[0] / 1000, y: 0})
       break
     case 'impulseY':
-      Matter.Body.applyForce(body, body.position, {x: 0, y: args[0] / 1000 })
+      Matter.Body.applyForce(body, body.position, {x: 0, y: -args[0] / 1000 })
       break
 
 
