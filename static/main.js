@@ -275,6 +275,7 @@ window.addEventListener("keydown",sendKey);
  *    A hash containing keys 'x' and 'y'.
  */
 function getRelativeCoordinates(event, reference) {
+        console.log(event, reference)
     var x, y;
     event = event || window.event;
     var el = event.target || event.srcElement;

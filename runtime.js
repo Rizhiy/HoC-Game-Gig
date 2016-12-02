@@ -234,6 +234,9 @@ function value(thing, ctx) {
     case 'getX': return ctx.entity.body.position.x
     case 'getY': return ctx.entity.body.position.y
     case 'getMass': return ctx.entity.body.mass
+    
+    case "mouseX": return ctx.mouseX
+    case "mouseY": return ctx.mouseY
 
     case 'nearest':
       let emoji = args[0]

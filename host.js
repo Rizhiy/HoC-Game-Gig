@@ -112,11 +112,19 @@ class Game {
       game: this,
       x: player.entity.body.position.x,
       y: player.entity.body.position.y,
+      mouseX: player.mouseX,
+      mouseY: player.mouseY
     })
   }
 
   handle_keydown(id, json) {
     // TODO
+  }
+  
+  handle_mouseMove(id, json) {
+      let player = this.players[id]
+      player.mouseX = json.position.x
+      player.mouseY = json.position.y
   }
 
 
