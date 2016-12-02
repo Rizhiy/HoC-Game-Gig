@@ -271,7 +271,9 @@ function render(entities) {
 
 function updateWands(coords){
     for(var i=0; i<coords.length; i++){
-        wandcoords[coords[i].id] = {x: coords[i].x, y: coords[i].y}
+        if(coords[i].id != playerid){
+            wandcoords[coords[i].id] = {x: coords[i].x, y: coords[i].y}
+        }
     }
 }
 
@@ -352,6 +354,9 @@ function sendMouse(e) {
             
             var wx = e.clientX - cx
             var wy = e.clientY - cy
+            
+            wandcoords[playerid] = {x: wx, y: wy}
+            
             window.conn.send({type:'mouseMove',position:{x:wx,y:wy}})
         }
     }
