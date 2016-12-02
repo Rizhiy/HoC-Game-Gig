@@ -145,3 +145,9 @@ function main(conn, emoji) {
 
 }
 
+
+function sendKey(e){
+    e = e || window.event;
+    window.conn.send({type:'keyPressed',keyCode: e.keyCode})
+}
+window.addEventListener("keydown",sendKey);
