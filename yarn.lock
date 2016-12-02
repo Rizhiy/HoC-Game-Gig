@@ -10,6 +10,10 @@ is-typedarray@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-typedarray/-/is-typedarray-1.0.0.tgz#e479c80858df0c1b11ddda6940f96011fcda4a9a"
 
+matter-js:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/matter-js/-/matter-js-0.11.1.tgz#ec0653f09f58d1eabfa4eed97a9baa18d8089036"
+
 ms@0.7.2:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
