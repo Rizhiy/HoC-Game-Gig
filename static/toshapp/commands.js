@@ -110,16 +110,16 @@ var Scratch = (function() {
     ["show variable %m.var",							" ", 9, "showVariable:"],
     ["hide variable %m.var",							" ", 9, "hideVariable:"],
 
-    // lists -- unsupported
-    ["add %s to %m.list",								" ", 12, "append:toList:"],
-    ["delete %d.listDeleteItem of %m.list",				" ", 12, "deleteLine:ofList:"],
-    ["insert %s at %d.listItem of %m.list",				" ", 12, "insert:at:ofList:"],
-    ["replace item %d.listItem of %m.list with %s",		" ", 12, "setLine:ofList:to:"],
-    ["show list %m.list",								" ", 12, "showList:"],
-    ["hide list %m.list",								" ", 12, "hideList:"],
-    ["item %d.listItem of %m.list",						"r", 12, "getLine:ofList:"],
-    ["length of %m.list",								"r", 12, "lineCountOfList:"],
-    ["%m.list contains %s?",								"b", 12, "list:contains:"],
+    //// lists -- unsupported
+    //["add %s to %m.list",								" ", 12, "append:toList:"],
+    //["delete %d.listDeleteItem of %m.list",				" ", 12, "deleteLine:ofList:"],
+    //["insert %s at %d.listItem of %m.list",				" ", 12, "insert:at:ofList:"],
+    //["replace item %d.listItem of %m.list with %s",		" ", 12, "setLine:ofList:to:"],
+    //["show list %m.list",								" ", 12, "showList:"],
+    //["hide list %m.list",								" ", 12, "hideList:"],
+    //["item %d.listItem of %m.list",						"r", 12, "getLine:ofList:"],
+    //["length of %m.list",								"r", 12, "lineCountOfList:"],
+    //["%m.list contains %s?",								"b", 12, "list:contains:"],
 
     /*
     // sound

@@ -108,28 +108,6 @@ var compare = function(x, y) {
     return xs < ys ? -1 : xs === ys ? 0 : 1;
 };
 
-var numLess = function(nx, y) {
-    if (typeof y === 'number' || DIGIT.test(y)) {
-      var ny = +y;
-      if (ny === ny) {
-        return nx < ny;
-      }
-    }
-    var ys = ('' + y).toLowerCase();
-    return '' + nx < ys;
-};
-
-var numGreater = function(nx, y) {
-    if (typeof y === 'number' || DIGIT.test(y)) {
-      var ny = +y;
-      if (ny === ny) {
-        return nx > ny;
-      }
-    }
-    var ys = ('' + y).toLowerCase();
-    return '' + nx > ys;
-};
-
 var equal = function(x, y) {
     if ((typeof x === 'number' || DIGIT.test(x)) && (typeof y === 'number' || DIGIT.test(y))) {
       var nx = +x;

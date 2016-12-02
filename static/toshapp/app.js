@@ -151,7 +151,7 @@ ScriptsEditor.prototype.getModeCfg = function() {
   // force re-highlight --slow!
   return {
     name: 'tosh',
-    variables: [],
+    variables: [], //'foo', 'bar', 'quxx', 'garply'],
     lists: [],
     definitions: [],
   };
