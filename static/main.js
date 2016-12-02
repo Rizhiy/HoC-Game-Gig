@@ -40,6 +40,7 @@ function loadEmoji(cb) {
     xhr.addEventListener("load", function(){
 		// Remove progress bar
 		document.getElementById("loadingcontainer").remove();
+		document.querySelector(".editor").style.visibility = "visible";
 
         var arrayBufferView = new Uint8Array( this.response );
         var blob = new Blob( [ arrayBufferView ], { type: "image/png" } );
@@ -73,7 +74,7 @@ function createDiv() {
 
 function addGround(){
     var ground = document.createElement("div");
-    ground.style.width = "4000px";
+    ground.style.width = "4100px";
     ground.style.height = "100px";
     ground.style.backgroundColor = "black";
     ground.style.position = "absolute";
@@ -86,7 +87,7 @@ function addSky(){
     var sky = document.createElement("div");
     sky.style.width = "4000px";
     sky.style.height = "100px";
-    sky.style.backskyColor = "blue";
+    sky.style.backgroundColor = "blue";
     sky.style.position = "absolute";
     sky.style.top = "0px";
     sky.style.left = "0px";
@@ -111,7 +112,7 @@ function addRight(){
     right.style.backgroundColor = "grey";
     right.style.position = "absolute";
     right.style.top = "0px";
-    right.style.right = "0px";
+    right.style.right = "-100px";
     return right;
 }
 
@@ -126,11 +127,49 @@ function setEmoji(img, name) {
   document.querySelector(".world").appendChild(img);
 }
 
+var messageboxes = {}
+var mbid = 0;
+function addMessageBox(entid, msg) {
+    var div = document.createElement("div")
+    div.style.borderRadius = "32px"
+    div.style.backgroundColor = "beige"
+    div.style.fontSize = "3em"
+    div.style.padding = "16px"
+    div.style.position = "absolute"
+    div.style.transform = "translate(-50%, -100%)"
+    div.style.visibility = "hidden"
+    div.style.zIndex = 1
+    div.innerHTML = msg
+    
+    document.querySelector(".world").appendChild(div)
+    
+    mbid += 1
+    messageboxes[mbid] = {div, id: entid};
+    
+    function die(id, div){
+        setTimeout(function(){
+            div.remove()
+            delete messageboxes[id]
+        }, 3000)
+    }
+    die(mbid, div);
+}
+
 function render(entities) {
   let byId = {}
+  let msgboxesById = {}
   for (var i=0; i<entities.length; i++) {
     let entity = entities[i]
     byId[entity.id] = entity
+  }
+  
+  let msgkeys = Object.keys(messageboxes)
+  for(var i=0; i<msgkeys.length; i++){
+    let msgbox = messageboxes[msgkeys[i]]
+    if (!msgboxesById[msgbox.id]){
+        msgboxesById[msgbox.id] = []
+    }
+    msgboxesById[msgbox.id].push(msgbox)
   }
 
   for (let id in byId) {
@@ -154,6 +193,17 @@ function render(entities) {
     }
     setEmoji(image, entity.name)
     image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
+    
+    var msgs = msgboxesById[id]
+    if(msgs){
+        for(var i=0; i<msgs.length; i++){
+            var msg = msgs[i]
+            msg.div.style.left = (entity.x + 36) + "px"
+            msg.div.style.top = entity.y + "px"
+            msg.div.style.visibility = "visible"
+        }
+    }
+    
     // TODO opacity
     // TODO visible
   }
@@ -162,7 +212,6 @@ function render(entities) {
 
   let player = byId[playerid]
   if (player) {
-    //console.log(player)
     var w = container.offsetWidth
     var h = container.offsetHeight
     var cx = -player.x + w/2
@@ -177,10 +226,11 @@ function choose(options) {
 }
 
 function doRender(){
-	var update = updates.shift()
-	if(update){
-		render(update)
-	}
+  var update = updates.shift()
+  if(update){
+      render(update)
+  }
+  updates = updates.slice(updates.length - 5)
 }
 
 var container = document.querySelector('.container')
@@ -197,7 +247,15 @@ function main(conn, emoji) {
 		console.log("I AM " + json.id)
         playerid = json.id
         break
+      case 'messagebox':
+        addMessageBox(json.id, json.message)
+        break
     }
+  })
+
+  conn.closed(() => {
+    console.log('closed!')
+    document.body.innerHTML = ''
   })
 
   conn.send({ type: 'spawn', name: choose(emojiNames) });
@@ -218,33 +276,116 @@ function sendKey(e){
 }
 window.addEventListener("keydown",sendKey);
 
-// Mouse event handler
+// Mouse event handler: Change orientation of wand to follow mouse
 function onWorldMouse(e){
 	
+	// Get mouse coords
 	var mouse_x = e.clientX
 	var mouse_y = e.clientY
 	
+	// Get 'wand' div elements
 	var wands = document.getElementsByClassName('wand')
 
 	// For each wand point it at mouse loc
 	for (let wand_idx in wands) {
 		var rect = wands[wand_idx].parentElement.getBoundingClientRect();
 		wand_x = (rect.right + rect.left)/2
-		wand_y = (rect.top+rect.bottom)/2
+		wand_y = (rect.top + rect.bottom)/2
 
-		var angle = 90.0+(Math.atan2(y-wand_y,x-wand_x)*(180.0/Math.PI));
+		// Angle of wand relative to vertical axis of emoji
+		var angle = 90.0+(Math.atan2(mouse_y-wand_y,mouse_x-wand_x)*(180.0/Math.PI));
 
+		// Set the new position and rotation of wand
+		
+		// New position
 		parent_transform = wands[wand_idx].parentElement.style.transform;
 		parent_rotation = parent_transform.match(/\.*rotate\(([\-0-9]+.[0-9]+)deg\)/)
 		parent_rotation = parent_rotation ? parseFloat(parent_rotation[1]) : 0;
 		new_angle = angle-parent_rotation;
-		new_x = 36*Math.sin(new_angle*(Math.PI/180.0));
-		new_y = -36*Math.cos(new_angle*(Math.PI/180.0));
 		
+		// New angle
+		var wand_offset = 36;
+		new_x = wand_offset*Math.sin(new_angle*(Math.PI/180.0));
+		new_y = -wand_offset*Math.cos(new_angle*(Math.PI/180.0));
+		
+		// Update transformation
 		wands[wand_idx].style.transform = `translate(${new_x}px, ${new_y}px) scale(0.5) rotate(${new_angle}deg)`
 	}
 }
+
 document.querySelector(".world").addEventListener("mousemove",onWorldMouse);
+
+/**
+ * TAKE FROM: https://acko.net/blog/mouse-handling-and-absolute-positions-in-javascript/
+ * Retrieve the coordinates of the given event relative to the center
+ * of the widget.
+ *
+ * @param event
+ *   A mouse-related DOM event.
+ * @param reference
+ *   A DOM element whose position we want to transform the mouse coordinates to.
+ * @return
+ *    A hash containing keys 'x' and 'y'.
+ */
+function getRelativeCoordinates(event, reference) {
+        console.log(event, reference)
+    var x, y;
+    event = event || window.event;
+    var el = event.target || event.srcElement;
+
+    if (!window.opera && typeof event.offsetX != 'undefined') {
+        // Use offset coordinates and find common offsetParent
+        var pos = { x: event.offsetX, y: event.offsetY };
+
+        // Send the coordinates upwards through the offsetParent chain.
+        var e = el;
+        while (e) {
+            e.mouseX = pos.x;
+            e.mouseY = pos.y;
+            pos.x += e.offsetLeft;
+            pos.y += e.offsetTop;
+            e = e.offsetParent;
+        }
+
+        // Look for the coordinates starting from the reference element.
+        var e = reference;
+        var offset = { x: 0, y: 0 }
+        while (e) {
+            if (typeof e.mouseX != 'undefined') {
+                x = e.mouseX - offset.x;
+                y = e.mouseY - offset.y;
+                break;
+            }
+            offset.x += e.offsetLeft;
+            offset.y += e.offsetTop;
+            e = e.offsetParent;
+        }
+
+        // Reset stored coordinates
+        e = el;
+        while (e) {
+            e.mouseX = undefined;
+            e.mouseY = undefined;
+            e = e.offsetParent;
+        }
+    }
+    else {
+        // Use absolute coordinates
+        var pos = getAbsolutePosition(reference);
+        x = event.pageX  - pos.x;
+        y = event.pageY - pos.y;
+    }
+    // Subtract distance to middle
+    return { x: x, y: y };
+}
+
+function sendMouse(e) {
+    e = e || window.event;
+    pos = getRelativeCoordinates(e,images[playerid]);
+    window.conn.send({type:'mouseMove',position:{x:pos.x,y:pos.y}})
+}
+
+window.addEventListener("mousemove",sendMouse);
 
 window.addEventListener("load", () => {
        loadEmoji(emoji => {
