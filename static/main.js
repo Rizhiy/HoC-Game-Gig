@@ -126,11 +126,42 @@ function setEmoji(img, name) {
   document.querySelector(".world").appendChild(img);
 }
 
+var messageboxes = {}
+var mbid = 0;
+function addMessageBox(entid, msg) {
+    var div = document.createElement("div")
+    div.style.borderRadius = "16px"
+    div.style.padding = "8px"
+    div.style.visibility = "hidden"
+    
+    document.querySelector(".world").appendChild(div)
+    
+    mbid += 1
+    messageboxes[mbid] = {div, id: entid};
+    
+    function die(id, div){
+        setTimeout(function(){
+            div.remove()
+            messageboxes[id] = null
+        , 1000})
+    }
+    die(mbid, div);
+}
+
 function render(entities) {
   let byId = {}
+  let msgboxesById = {}
   for (var i=0; i<entities.length; i++) {
     let entity = entities[i]
     byId[entity.id] = entity
+  }
+  
+  for(var i=0; i<messageboxes.length; i++){
+    let msgbox = messageboxes[i]
+    if (!msgboxesById[msgbox.entid]){
+        msgboxesById[msgbox.entid] = []
+    }
+    msgboxesById[msgbox.entid].append(msgbox)
   }
 
   for (let id in byId) {
@@ -185,6 +216,7 @@ function main(conn, emoji) {
         break
       case 'messagebox':
         console.log("messagebox: " + json.message)
+        addMessageBox(json.id, json.message)
         break
     }
   })
