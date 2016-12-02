@@ -54,7 +54,7 @@ var server = http.createServer(function(request, response) {
       }
     }
     else {
-      response.writeHead(200, { 'Content-Type': contentType })
+      response.writeHead(200, { 'Content-Type': contentType, 'Content-Length': content.length })
       response.end(content, 'utf-8')
     }
   })
