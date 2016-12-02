@@ -61,6 +61,7 @@ function loadEmoji(cb) {
 }
 
 let images = {}
+var removed = {}
 
 function createDiv() {
   var img = document.createElement("div");
@@ -78,18 +79,18 @@ function addGround(){
     ground.style.height = "100px";
     ground.style.backgroundColor = "black";
     ground.style.position = "absolute";
-    ground.style.top = "2000px";
+    ground.style.top = "2050px";
     ground.style.left = "0px";
     return ground
 }
 
 function addSky(){
     var sky = document.createElement("div");
-    sky.style.width = "4000px";
+    sky.style.width = "4100px";
     sky.style.height = "100px";
     sky.style.backgroundColor = "blue";
     sky.style.position = "absolute";
-    sky.style.top = "0px";
+    sky.style.top = "-80px";
     sky.style.left = "0px";
     return sky
 }
@@ -97,22 +98,22 @@ function addSky(){
 function addLeft(){
     var left = document.createElement("div");
     left.style.width = "100px";
-    left.style.height = "2000px";
+    left.style.height = "2100px";
     left.style.backgroundColor = "grey";
     left.style.position = "absolute";
     left.style.top = "0px";
-    left.style.left = "0px";
+    left.style.left = "-80px";
     return left;
 }
 
 function addRight(){
     var right = document.createElement("div");
     right.style.width = "100px";
-    right.style.height = "2000px";
+    right.style.height = "2100px";
     right.style.backgroundColor = "grey";
     right.style.position = "absolute";
     right.style.top = "0px";
-    right.style.right = "-100px";
+    right.style.right = "-150px";
     return right;
 }
 
@@ -123,8 +124,8 @@ function setEmoji(img, name) {
 
   img.style.backgroundPosition = "-" + (72*x) + "px -" + (72*y) + "px";
   img.style.backgroundSize = "2304px 2304px";
-  
-  document.querySelector(".world").appendChild(img);
+
+  world.appendChild(img);
 }
 
 var messageboxes = {}
@@ -141,7 +142,7 @@ function addMessageBox(entid, msg) {
     div.style.zIndex = 1
     div.innerHTML = msg
     
-    document.querySelector(".world").appendChild(div)
+    world.appendChild(div)
     
     mbid += 1
     messageboxes[mbid] = {div, id: entid};
@@ -202,6 +203,7 @@ function render(entities) {
   let msgboxesById = {}
   for (var i=0; i<entities.length; i++) {
     let entity = entities[i]
+    if (removed[entity.id]) return
     byId[entity.id] = entity
   }
   
@@ -237,6 +239,7 @@ function render(entities) {
     }
     setEmoji(image, entity.name)
     image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
+    image.style.opacity = entity.opacity
     
     if (wandcoords[id]){
         updateWand(id)
@@ -255,8 +258,6 @@ function render(entities) {
     // TODO opacity
     // TODO visible
   }
-  
-  let world = document.querySelector(".world")
 
   let player = byId[playerid]
   if (player) {
@@ -266,7 +267,6 @@ function render(entities) {
     var cy = -player.y + h/2
     world.style.transform = `translate(${cx}px, ${cy}px)`
   }
-  // TODO remove dead entities
 }
 
 function updateWands(coords){
@@ -286,7 +286,8 @@ function doRender(){
   }
   updates = updates.slice(updates.length - 5)
 }
-
+  
+var world = document.querySelector(".world")
 var container = document.querySelector('.container')
 var updates = []
 function main(conn, emoji) {
@@ -307,6 +308,10 @@ function main(conn, emoji) {
       case 'mousePos':
         updateWands(json.coords)
         break
+      case 'remove_entity':
+        removed[json.id] = true
+        world.removeChild(images[json.id])
+        delete images[json.id]
     }
   })
 
@@ -332,7 +337,6 @@ function sendKey(e){
     window.conn.send({type:'keydown',keyCode: e.keyCode})
 }
 window.addEventListener("keydown",sendKey);
-
 
 function sendMouse(e) {
     e = e || window.event;

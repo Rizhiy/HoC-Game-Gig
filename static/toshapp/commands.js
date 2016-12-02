@@ -2,7 +2,7 @@ var Scratch = (function() {
 
   var scratchCommands = [
 
-    ["with %m.spriteOrMouse",				"c", 6, "with:", "myself"],
+    ["with %m.spriteOnly",				"c", 6, "with:", "myself"],
 
     // entities
     ["spawn %m.emoji",					    " ", 3, "spawnEntity"],
@@ -37,7 +37,9 @@ var Scratch = (function() {
     ["%m.mathOp of %n",						"r", 8, "computeFunction:of:",	"sqrt", 9],
 
     // physics
-    ["forward %n",						" ", 1, "forward",					10],
+    ["forward %n",						    " ", 1, "forward",					10],
+    ["move right %n",						" ", 1, "impulseX",					10],
+    ["move up %n",						    " ", 1, "impulseY",					10],
     ["turn %n degrees",			            " ", 1, "rotate",				15],
     ["change x by %n",						" ", 1, "changeX",					10],
     ["change y by %n",			            " ", 1, "changeY",				15],
@@ -56,8 +58,8 @@ var Scratch = (function() {
     // visuals
     ["set opacity to %n%",			        " ", 2, "setOpacity",		0],
     ["change opacity by %n%",		        " ", 2, "changeOpacity",	10],
-    ["set size to %n%",						" ", 2, "setScale", 				100],
-    ["change size by %n",					" ", 2, "changeScale",	 		10],
+    ["scale by %n%",						" ", 2, "scaleBy", 				100],
+    //["change size by %n",					" ", 2, "changeScale",	 		10],
     ["show",								" ", 2, "show"],
     ["hide",								" ", 2, "hide"],
     ["say %s",								" ", 2, "say",							"Hello!"],
@@ -108,16 +110,16 @@ var Scratch = (function() {
     ["show variable %m.var",							" ", 9, "showVariable:"],
     ["hide variable %m.var",							" ", 9, "hideVariable:"],
 
-    // lists -- unsupported
-    ["add %s to %m.list",								" ", 12, "append:toList:"],
-    ["delete %d.listDeleteItem of %m.list",				" ", 12, "deleteLine:ofList:"],
-    ["insert %s at %d.listItem of %m.list",				" ", 12, "insert:at:ofList:"],
-    ["replace item %d.listItem of %m.list with %s",		" ", 12, "setLine:ofList:to:"],
-    ["show list %m.list",								" ", 12, "showList:"],
-    ["hide list %m.list",								" ", 12, "hideList:"],
-    ["item %d.listItem of %m.list",						"r", 12, "getLine:ofList:"],
-    ["length of %m.list",								"r", 12, "lineCountOfList:"],
-    ["%m.list contains %s?",								"b", 12, "list:contains:"],
+    //// lists -- unsupported
+    //["add %s to %m.list",								" ", 12, "append:toList:"],
+    //["delete %d.listDeleteItem of %m.list",				" ", 12, "deleteLine:ofList:"],
+    //["insert %s at %d.listItem of %m.list",				" ", 12, "insert:at:ofList:"],
+    //["replace item %d.listItem of %m.list with %s",		" ", 12, "setLine:ofList:to:"],
+    //["show list %m.list",								" ", 12, "showList:"],
+    //["hide list %m.list",								" ", 12, "hideList:"],
+    //["item %d.listItem of %m.list",						"r", 12, "getLine:ofList:"],
+    //["length of %m.list",								"r", 12, "lineCountOfList:"],
+    //["%m.list contains %s?",								"b", 12, "list:contains:"],
 
     /*
     // sound

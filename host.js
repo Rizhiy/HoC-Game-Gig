@@ -10,6 +10,8 @@ class Player {
     this.game = game
     this.id = id
     this.send = send
+
+    this.onKey = {}
   }
 
   place(name, x = 0, y = 0) {
@@ -18,8 +20,22 @@ class Player {
   }
 
   destroy() {
+    this.game.remove(this.entity)
+    // TODO anything else?
   }
 
+  run(code, interactive = false) {
+    let player = this
+    runtime.evaluate(code, {
+      player: player,
+      entity: player.entity,
+      game: this.game,
+      x: player.entity.body.position.x,
+      y: player.entity.body.position.y,
+      mouseX: player.mouseX,
+      mouseY: player.mouseY
+    }, interactive)
+  }
 }
 
 
@@ -28,6 +44,8 @@ class Entity {
     this.name = name
     this.body = Matter.Bodies.circle(x, y, Entity.RADIUS)
     this.id = this.body.id
+
+    this.threads = []
   }
 
   toJSON() {
@@ -44,6 +62,30 @@ class Entity {
       visible: render.visible,
     }
   }
+
+  distanceTo(other){
+    dx = this.body.position.x - other.body.position.x;
+    dy = this.body.position.y - other.body.position.y;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+
+  findClosest(){
+    var closest = null;
+    var smallestDistance = null;
+    Game.entities.forEach(function(entity){
+        var distance = this.distanceTo(entity);
+        if(!closest) {
+            closest = entity;
+            smallestDistance = distance;
+        }
+        if(distance < smallestDistance){
+          closest = entity;
+          smallestDistance = distance;
+        }
+      }
+    );
+    return closest;
+  }
 }
 Entity.highestId = 0
 Entity.RADIUS = 36
@@ -58,10 +100,10 @@ class Game {
     this.entitiesById = {}
 
     this.engine = Matter.Engine.create();
-      var sky = Matter.Bodies.rectangle(0,-Game.HEIGHT/2,Game.WIDTH,100,{isStatic:true})
-      var ground = Matter.Bodies.rectangle(0, Game.HEIGHT/2, Game.WIDTH, 100, { isStatic: true })
-      var right = Matter.Bodies.rectangle(Game.WIDTH/2,0,100,Game.HEIGHT,{isStatic:true})
-      var left = Matter.Bodies.rectangle(-Game.WIDTH/2,0,100,Game.HEIGHT,{isStatic:true})
+      var sky = Matter.Bodies.rectangle(0,-(Game.HEIGHT+Game.BORDER_WIDTH)/2,Game.WIDTH+Game.BORDER_WIDTH,Game.BORDER_WIDTH,{isStatic:true})
+      var ground = Matter.Bodies.rectangle(0, (Game.HEIGHT+Game.BORDER_WIDTH)/2, Game.WIDTH+Game.BORDER_WIDTH, Game.BORDER_WIDTH, { isStatic: true })
+      var right = Matter.Bodies.rectangle((Game.WIDTH+Game.BORDER_WIDTH)/2,0,Game.BORDER_WIDTH,Game.HEIGHT+Game.BORDER_WIDTH,{isStatic:true})
+      var left = Matter.Bodies.rectangle(-(Game.WIDTH+Game.BORDER_WIDTH)/2,0,Game.BORDER_WIDTH,Game.HEIGHT+Game.BORDER_WIDTH,{isStatic:true})
       Matter.World.add(this.engine.world,[sky,ground,right,left]);
   }
 
@@ -106,26 +148,24 @@ class Game {
     let code = scripts[0]
     console.log(JSON.stringify(code))
 
-    runtime.evaluate(code, {
-      me: player.entity,
-      entity: player.entity,
-      game: this,
-      x: player.entity.body.position.x,
-      y: player.entity.body.position.y,
-      mouseX: player.mouseX,
-      mouseY: player.mouseY
-    })
+    player.run(code, true)
   }
 
-  handle_keydown(id, json) {
-    // TODO
-  }
-  
   handle_mouseMove(id, json) {
       let player = this.players[id]
       player.mouseX = json.position.x
       player.mouseY = json.position.y
   }
+
+  handle_keydown(id, json) {
+    let player = this.players[id]
+    let code = player.onKey[json.keyCode]
+    console.log(code)
+    if (code) {
+      player.run(code)
+    }
+  }
+  
 
 
   /* entities */
@@ -141,10 +181,12 @@ class Game {
     let entity = this.entitiesById[entityId]
     delete this.entitiesById[entityId]
     let index = this.entities.indexOf(entity)
-    if (index === -1) throw 'already removed'
+    if (index === -1) return
     this.entities.splice(index, 1)
 
-    // TODO remove Matter.js entity
+    Matter.World.remove(this.engine.world, entity.body)
+
+    this.broadcast({ type: 'remove_entity', id: entityId })
   }
 
 
@@ -154,7 +196,15 @@ class Game {
     // TODO sync entity values to/from Matter.js ???
     Matter.Engine.update(this.engine, 1000/fps)
 
+    this.tickEntities()
     this.stream()
+  }
+
+  tickEntities() {
+    let entities = this.entities
+    for (var i=entities.length; i--; ) {
+      runtime.tickEntity(entities[i])
+    }
   }
 
   // send world to clients
@@ -187,10 +237,10 @@ class Game {
 }
 Game.WIDTH = 4000;
 Game.HEIGHT = 2000;
+Game.BORDER_WIDTH = 1000;
 
 
 
 module.exports = {
   Game,
 }
-
