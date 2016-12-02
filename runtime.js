@@ -86,6 +86,9 @@ function value(thing, ctx) {
     case '*':  return num(args[0]) * num(args[1])
     case '/':  return num(args[0]) / num(args[1])
 
+    case 'getEmoji':
+      return ctx.entity.name
+
     case 'nearest':
       let emoji = args[0]
       // TODO find nearest emoji!
