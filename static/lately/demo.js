@@ -19,7 +19,12 @@ stack => '...'                    ${a => ['nop']}
 
 stmt => 'spawn' emoji             ${a => ['spawn', a] }
 stmt => 'become' emoji            ${a => ['lookLike', a] }
-stmt => 'nudge right' int         ${a => ['nudgeRight', a] }
+stmt => 'nudge' entity 'x:' int 'y:' int   ${(a, b, c) => ['nudgeXY', a, b, c] }
+stmt => 'become' emoji            ${a => ['setEmoji', ['thisPlayer'], a]}
+stmt => 'set' 'rotation' 'to' int   ${a => ['setAngle', a]}
+stmt => 'turn' 'by' int           ${a => ['rotate', a]}
+
+entity => 'myself'                ${() => ['thisPlayer'] }
 
 stmt --> 'repeat' SEP int NL stack NL 'end'    ${function() { return ['repeat', arguments[7], arguments[9]] }}
 stmt --> 'forever' NL stack NL 'end'           ${function() { return ['forever', arguments[8]] }}
@@ -27,6 +32,7 @@ stmt --> 'forever' NL stack NL 'end'           ${function() { return ['forever',
 stmt => 'when' 'I' 'press' key    ${a => ['whenPressed', a]}
 
 int --> digits                     ${a => parseInt(a)}
+int --> '-' digits                ${(a, b) => -parseInt(b)}
 digits --> digit                  ${a => ''+a}
       | digits digit              ${(a, b) => a + (''+b)}
 digit --> '0' ${a => '0'}
@@ -56,7 +62,7 @@ SEP --> ' '
 
 emojiNames.forEach(name => {
   let symbols = Array.from(name).map(x => x === ' ' ? Lately.Token.SEP : x)
-  myDslGrammar.add(new Lately.Rule(Symbol.for('emoji'), symbols, function() { return ['emoji', name] }))
+  myDslGrammar.add(new Lately.Rule(Symbol.for('emoji'), symbols, function() { return name }))
 })
 
 function hm(d) {
@@ -70,7 +76,8 @@ function hm(d) {
 var highlightMap = hm({
   stmt: 'keyword',
   emoji: 'atom',
-  key: 'string',
+  entity: 'string',
+  key: 'number',
   int: 'number',
 })
 
@@ -141,7 +148,8 @@ editor.on('keydown', (cm, e) => {
       json: json[0],
     })
 
-    cm.setValue("")
+    // clear the editor
+    //cm.setValue("")
   }
 })
 
