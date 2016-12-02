@@ -33,8 +33,8 @@ class Entity {
     return {
       id: this.id,
       name: this.name,
-      x: body.position.x,
-      y: body.position.y,
+      x: body.position.x + Game.WIDTH/2,
+      y: body.position.y + Game.HEIGHT/2,
       rot: 180 / Math.PI * body.angle,
       scale: render.sprite.xScale,
       opacity: render.opacity,
@@ -55,12 +55,10 @@ class Game {
     this.entitiesById = {}
 
     this.engine = Matter.Engine.create();
-    this.width = 4000;
-    this.height = 2000;
-      var sky = Matter.Bodies.rectangle(0,-this.height/2,this.width,100,{isStatic:true})
-      var ground = Matter.Bodies.rectangle(0, this.height/2, this.width, 100, { isStatic: true })
-      var right = Matter.Bodies.rectangle(this.width/2,0,100,this.height,{isStatic:true})
-      var left = Matter.Bodies.rectangle(-this.width/2,0,100,this.height,{isStatic:true})
+      var sky = Matter.Bodies.rectangle(0,-Game.HEIGHT/2,Game.WIDTH,100,{isStatic:true})
+      var ground = Matter.Bodies.rectangle(0, Game.HEIGHT/2, Game.WIDTH, 100, { isStatic: true })
+      var right = Matter.Bodies.rectangle(Game.WIDTH/2,0,100,Game.HEIGHT,{isStatic:true})
+      var left = Matter.Bodies.rectangle(-Game.WIDTH/2,0,100,Game.HEIGHT,{isStatic:true})
       Matter.World.add(this.engine.world,[sky,ground,right,left]);
   }
 
@@ -139,6 +137,8 @@ class Game {
   }
 
 }
+Game.WIDTH = 4000;
+Game.HEIGHT = 2000;
 
 
 
