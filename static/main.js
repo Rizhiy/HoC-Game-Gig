@@ -135,6 +135,7 @@ function main(conn, emoji) {
       case 'player_id':
 		console.log("I AM " + json.id)
         playerid = json.id
+        break
     }
   })
 
@@ -147,9 +148,18 @@ function main(conn, emoji) {
 
 }
 
-
 function sendKey(e){
     e = e || window.event;
     window.conn.send({type:'keyPressed',keyCode: e.keyCode})
 }
 window.addEventListener("keydown",sendKey);
+
+window.addEventListener("load", () => {
+       loadEmoji(emoji => {
+               let conn = new Connection()
+               conn.opened = () => {
+                       main(conn, emoji)
+               }
+       });
+})
+ 

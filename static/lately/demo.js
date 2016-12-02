@@ -45,7 +45,9 @@ var cmOptions = {
     grammar: myDslGrammar,
     highlight: tag => highlightMap[tag] || null,
   },
-  extraKeys: {'Ctrl-Space': 'autocomplete'},
+  extraKeys: {
+    'Ctrl-Space': 'autocomplete',
+  },
 
   indentUnit: 3,
   smartIndent: true,
@@ -77,11 +79,23 @@ CodeMirror.commands.autocomplete = function(cm) {
 var editor = CodeMirror(document.querySelector('.editor'), cmOptions)
 
 this.editor.setValue(
-`hello sweet and really happy world
-`
+``
 )
 
 editor.on('change', CodeMirror.commands.autocomplete)
+
+editor.on('keydown', (cm, e) => {
+  if (e.keyCode === 13 && (e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) {
+    let code = cm.getValue()
+
+    conn.send({
+      type: 'code',
+      code: code,
+    })
+
+    cm.setValue("")
+  }
+})
 
 function compile() {
   let result = this.editor.getMode()._completer.parse(this.editor.getValue())

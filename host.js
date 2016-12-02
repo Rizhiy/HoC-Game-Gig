@@ -100,6 +100,12 @@ class Game {
     player.place(json.name, json.x, json.y)
   }
 
+  handle_code(id, json) {
+    let code = json.code
+    console.log(json)
+    // TODO
+  }
+
 
   /* entities */
 
