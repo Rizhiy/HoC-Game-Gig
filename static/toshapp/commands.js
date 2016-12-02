@@ -50,7 +50,9 @@ var Scratch = (function() {
     ["y position",							"r", 1, "getY"],
     ["direction",							"r", 1, "getAngle"],
     ["set mass to %n",			            " ", 1, "setMass",		0],
+    ["set restitution to %n",			            " ", 1, "setRestitution",		0],
     ["mass",							    "r", 1, "getMass"],
+    ["restitution",							    "r", 1, "getRestitution"],
 
     // TODO mass, restitution, etc...
 
