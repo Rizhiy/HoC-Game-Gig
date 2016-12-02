@@ -163,6 +163,11 @@ class Game {
       player.run([code])
     }
   }
+
+  handle_mouseClick(id,json){
+    let player = this.players[id];
+    console.log(id + " has pressed the mouse button");
+  }
   
 
 

@@ -364,6 +364,15 @@ function sendMouse(e) {
 
 window.addEventListener("mousemove",sendMouse);
 
+
+function sendMouseKey(e){
+    e = e || window.event;
+    console.log(e);
+    window.conn.send({type: "mouseClick"});
+}
+
+window.addEventListener("click",sendMouseKey);
+
 window.addEventListener("load", () => {
        loadEmoji(emoji => {
                let conn = new Connection()
