@@ -38,6 +38,9 @@ function loadEmoji(cb) {
     xhr.responseType = "arraybuffer";
 
     xhr.addEventListener("load", function(){
+		// Remove progress bar
+		document.getElementById("loadingcontainer").remove();
+
         var arrayBufferView = new Uint8Array( this.response );
         var blob = new Blob( [ arrayBufferView ], { type: "image/png" } );
         var urlCreator = window.URL || window.webkitURL;
