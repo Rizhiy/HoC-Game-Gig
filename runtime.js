@@ -1,6 +1,7 @@
 
 const Matter = require('matter-js/build/matter.js')
 
+const emojiList = require('./static/emoji-list.js')
 
 
 function evaluate(thing, ctx) {
@@ -94,6 +95,9 @@ function value(thing, ctx) {
       // TODO find nearest emoji!
       return ctx.this
 
+    case 'randomEmoji':
+      return choose(emojiList)
+
     default:
       console.log('unknown selector', selector, JSON.stringify(args))
   }
@@ -108,5 +112,9 @@ function evaluateSeq(things, ctx) {
 
 module.exports = {
   evaluate: evaluateSeq,
+}
+
+function choose(options) {
+  return options[Math.floor(Math.random() * options.length)]
 }
 

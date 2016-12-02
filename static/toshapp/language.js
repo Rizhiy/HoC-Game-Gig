@@ -740,7 +740,7 @@ var Language = (function(Earley) {
 
   var menusThatAcceptReporters = ['broadcast', 'costume', 'backdrop',
       'location', 'scene', 'sound', 'spriteOnly', 'spriteOrMouse',
-      'spriteOrStage', 'touching'];
+      'spriteOrStage', 'touching', 'emoji'];
 
   var menuOptions = {
     'attribute': ['x position', 'y position', 'direction', 'costume #', 'costume name', 'backdrop #', 'backdrop name', 'size', 'volume'],

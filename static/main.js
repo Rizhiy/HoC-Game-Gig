@@ -238,7 +238,8 @@ function main(conn, emoji) {
     }
   })
 
-  conn.close(() => {
+  conn.closed(() => {
+    console.log('closed!')
     document.body.innerHTML = ''
   })
 
