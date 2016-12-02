@@ -35,6 +35,26 @@ strong {
   float: right;
 }
 
+#loadingcontainer{
+    width: 50%;
+    background: #999;
+}
+
+#loadingtext {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 3em;
+    width: 100%;
+    display: block;
+}
+
+#loadingbar {
+    background: #09f;
+    height:20px;
+    width: 0%;
+}
+
 .world{
 	height: 2000px;
 	width: 4000px;
