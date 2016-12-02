@@ -100,7 +100,7 @@ function render(entities) {
       images[id] = image = createDiv()
     }
     setEmoji(image, entity.name)
-    image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale})`
+    image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
   }
 
   // TODO remove dead entities

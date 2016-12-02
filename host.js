@@ -131,6 +131,7 @@ class Game {
       let entity = entities[i]
       entity.x = entity.body.position.x
       entity.y = entity.body.position.y
+      entity.rot = 180 / Math.PI * entity.body.angle
     }
 
     this.stream()
