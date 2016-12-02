@@ -70,7 +70,6 @@ class Game {
 
   player(playerId, send) {
     let player = this.players[playerId] = new Player(this, playerId, send)
-    this.send(player.id, { type: 'player_id', id: player.id })
   }
 
   removePlayer(playerId) {
@@ -98,6 +97,7 @@ class Game {
   handle_spawn(id, json) {
     let player = this.players[id]
     player.place(json.name, json.x, json.y)
+    player.send({ type: 'player_id', id: player.entity.id })
   }
 
   handle_code(id, json) {

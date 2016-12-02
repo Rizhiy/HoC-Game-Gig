@@ -89,25 +89,26 @@ function render(entities) {
     byId[entity.id] = entity
   }
 
-	if(playerid && byId[playerid]){
+  for (let id in byId) {
+    var entity = byId[id]
+    var image = images[id]
+    if (!image) {
+      images[id] = image = createDiv()
+    }
+    setEmoji(image, entity.name)
+    image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
+    // TODO opacity
+    // TODO visible
+  }
+  
+  let world = document.querySelector(".world")
 
-	  for (let id in byId) {
-		var entity = byId[id]
-		var image = images[id]
-		if (!image) {
-		  images[id] = image = createDiv()
-		}
-		setEmoji(image, entity.name)
-		image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
-		// TODO opacity
-		// TODO visible
-	  }
-	  
-		let world = document.querySelector(".world")
-
-		world.style.left = -byId[playerid].x + "px"
-		world.style.top = -byId[playerid].y + "px"
-	}
+  let player = byId[playerid]
+  if (player) {
+    console.log(player)
+    world.style.left = -player.x + "px"
+    world.style.top = -player.y + "px"
+  }
   // TODO remove dead entities
 }
 
