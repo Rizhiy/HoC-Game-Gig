@@ -107,6 +107,7 @@ class Game {
 
     runtime.evaluate(code, {
       me: player.entity,
+      entity: player.entity,
       game: this,
       x: player.entity.body.position.x,
       y: player.entity.body.position.y,

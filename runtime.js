@@ -17,36 +17,42 @@ function evaluate(thing, ctx) {
     case 'spawn':
       var [name] = values
       ctx.game.spawn(name, ctx.x, ctx.y)
-      return null
+      break
 
     case 'setEmoji':
       var [entity, name] = values
       entity.name = name
-      return null
+      break
 
     case 'setAngle':
       var [entity, angle] = values
-      Matter.Body.setAngle(entity.body, Math.PI / 180 * angle)
-      return null
+      console.log(entity.body)
+      Matter.Body.setAngle(ctx.entity.body, Math.PI / 180 * angle)
+      break
       
     case 'say':
-        var [message] = values
-        ctx.game.broadcast({ type: 'messagebox', id: ctx.entity.id, message }
-        return null
+      var [message] = values
+      ctx.game.broadcast({ type: 'messagebox', id: ctx.entity.id, message }
+      break
 
     case 'rotate':
       var [entity, angle] = values
-      Matter.Body.rotate(entity.body, Math.PI / 180 * angle)
-      return null
+      Matter.Body.rotate(ctx.entity.body, Math.PI / 180 * angle)
+      break
+
+    case 'gotoXY':
+      var [x, y] = values
+      Matter.Body.setPosition(ctx.entity.body, {x, y})
+      break
 
     case 'nudgeXY':
-      var [entity, x, y] = values
+      var [x, y] = values
       x /= 100
       y /= -100
-      var body = entity.body
+      let body = ctx.entity.body
       Matter.Body.applyForce(body, body.position, {x, y})
-      return null
-    
+      break
+
     default:
       console.log('unknown selector', selector, JSON.stringify(args))
   }

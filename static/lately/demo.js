@@ -19,10 +19,11 @@ stack => '...'                    ${a => ['nop']}
 
 stmt => 'spawn' emoji             ${a => ['spawn', a] }
 stmt => 'become' emoji            ${a => ['lookLike', a] }
-stmt => 'nudge' entity 'x:' int 'y:' int   ${(a, b, c) => ['nudgeXY', a, b, c] }
+stmt => 'nudge' 'x:' int 'y:' int   ${(a, b, c) => ['nudgeXY', a, b, c] }
 stmt => 'become' emoji            ${a => ['setEmoji', ['thisPlayer'], a]}
 stmt => 'set' 'rotation' 'to' int   ${a => ['setAngle', a]}
 stmt => 'turn' 'by' int           ${a => ['rotate', a]}
+stmt => 'say' text                ${a => ['say', a]}
 
 entity => 'myself'                ${() => ['thisPlayer'] }
 
@@ -76,7 +77,8 @@ function hm(d) {
 var highlightMap = hm({
   stmt: 'keyword',
   emoji: 'atom',
-  entity: 'string',
+  entity: 'atom',
+  text: 'string',
   key: 'number',
   int: 'number',
 })
