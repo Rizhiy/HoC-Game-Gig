@@ -23,6 +23,7 @@ class Player {
 
 class Entity {
   constructor(name = '', x = 0, y = 0, rot = 0, scale = 1, opacity = 1, mass = 1) {
+    this.id = ++Entity.highestId
     this.name = name
     this.x = x
     this.y = y
@@ -43,6 +44,7 @@ class Entity {
     }
   }
 }
+Entity.highestId = 0
 
 
 
@@ -51,6 +53,7 @@ class Game {
   constructor() {
     this.players = {}
     this.entities = []
+    this.entitiesById = {}
 
     this.engine = Matter.Engine.create()
   }
@@ -94,7 +97,17 @@ class Game {
 
   add(entity) {
     this.entities.push(entity)
-    // TODO add to Matter.js
+    this.entitiesById[entity.id] = entity
+
+    // TODO add body to Matter.js
+  }
+
+  remove(entityId) {
+    let entity = this.entitiesById[entityId]
+    delete this.entitiesById[entityId]
+    let index = this.entities.indexOf(entity)
+    if (index === -1) throw 'already removed'
+    this.entities.splice(index, 1)
   }
 
 
@@ -102,6 +115,7 @@ class Game {
 
   tick() {
 
+    // TODO sync entity values to/from Matter.js ???
   }
   
 }
