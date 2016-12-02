@@ -32,7 +32,7 @@ function evaluate(thing, ctx) {
       
     case 'say':
       var [message] = values
-      ctx.game.broadcast({ type: 'messagebox', id: ctx.entity.id, message }
+      ctx.game.broadcast({ type: 'messagebox', id: ctx.entity.id, message })
       break
 
     case 'rotate':
