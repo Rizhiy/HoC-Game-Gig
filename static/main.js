@@ -194,6 +194,7 @@ function render(entities) {
     }
     setEmoji(image, entity.name)
     image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
+    image.style.opacity = entity.opacity
     
     var msgs = msgboxesById[id]
     if(msgs){

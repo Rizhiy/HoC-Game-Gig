@@ -13,6 +13,7 @@ function evaluate(thing, ctx) {
     args.push(value(inputs[i], ctx))
   }
 
+  var body = ctx.entity.body
   switch (selector) {
     case 'spawnEntity':
       var [name] = args
@@ -29,17 +30,16 @@ function evaluate(thing, ctx) {
 
     case 'setAngle':
       var [angle] = args
-      Matter.Body.setAngle(ctx.entity.body, Math.PI / 180 * angle)
+      Matter.Body.setAngle(body, Math.PI / 180 * angle)
       break
     case 'rotate': // TODO torque?!?!
       var [angle] = args
-      Matter.Body.rotate(ctx.entity.body, Math.PI / 180 * angle)
+      Matter.Body.rotate(body, Math.PI / 180 * angle)
       break
 
     case 'scaleBy':
       var [percent] = args
       var f = percent / 100
-      var body = ctx.entity.body
       //var scale = body.render.sprite.xScale
       Matter.Body.scale(body, f, f)
       body.render.sprite.xScale *= f
@@ -47,31 +47,45 @@ function evaluate(thing, ctx) {
 
     case 'setMass':
       var [mass] = args
-      Matter.Body.setMass(ctx.entity.body, mass)
+      Matter.Body.setMass(body, mass)
       break
+
+    case 'setOpacity':
+      body.render.opacity = args[0] / 100
+      break
+    case 'changeOpacity':
+      body.render.opacity += args[0] / 100
+      break
+
 
     case 'gotoXY':
       var [x, y] = args
-      Matter.Body.setPosition(ctx.entity.body, {x, y})
+      Matter.Body.setPosition(body, {x, y})
       break
     case 'changeX':
       var [x] = args
       var y = 0
-      Matter.Body.translate(ctx.entity.body, {x, y})
+      Matter.Body.translate(body, {x, y})
       break
     case 'changeY':
       var x = 0
       var [y] = args
-      Matter.Body.translate(ctx.entity.body, {x, y})
+      Matter.Body.translate(body, {x, y})
       break
 
     case 'forward':
       var [amount] = args
-      var body = ctx.entity.body
       var x = Math.sin(body.angle) / 100 * amount
       var y = Math.cos(body.angle) / 100 * amount
       Matter.Body.applyForce(body, body.position, {x, y})
       break
+    case 'impulseX':
+      Matter.Body.applyForce(body, body.position, {x: args[0] / 1000, y: 0})
+      break
+    case 'impulseY':
+      Matter.Body.applyForce(body, body.position, {x: 0, y: args[0] / 1000 })
+      break
+
 
     default:
       console.log('unknown selector', selector, JSON.stringify(args))

@@ -38,6 +38,8 @@ var Scratch = (function() {
 
     // physics
     ["forward %n",						" ", 1, "forward",					10],
+    ["move right %n",						" ", 1, "impulseX",					10],
+    ["move up %n",						" ", 1, "impulseY",					10],
     ["turn %n degrees",			            " ", 1, "rotate",				15],
     ["change x by %n",						" ", 1, "changeX",					10],
     ["change y by %n",			            " ", 1, "changeY",				15],
