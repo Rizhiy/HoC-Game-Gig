@@ -136,6 +136,8 @@ function main(conn, emoji) {
     }
   })
 
+  // document.querySelector('.container').offsetWidth
+
   conn.send({ type: 'spawn', name: choose(emojiNames) })
   
   let fps = 25;
