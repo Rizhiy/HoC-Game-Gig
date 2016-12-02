@@ -60,7 +60,7 @@ class Game {
 
     this.engine = Matter.Engine.create()
 
-      var ground = Matter.Bodies.rectangle(400, 610, 810, 60, { isStatic: true })
+      var ground = Matter.Bodies.rectangle(400, 610, 2000, 60, { isStatic: true })
       Matter.World.add(this.engine.world,[ground]);
   }
 
