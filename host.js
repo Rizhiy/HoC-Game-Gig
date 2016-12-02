@@ -113,6 +113,10 @@ class Game {
     // TODO
   }
 
+  handle_keydown(id, json) {
+    // TODO
+  }
+
 
   /* entities */
 
