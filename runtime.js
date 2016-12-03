@@ -52,10 +52,6 @@ function evaluate(thing, ctx) {
       // TODO
       break
 
-    case 'timer':
-      // TODO
-      break
-
     case 'scaleBy':
       var [percent] = args
       var f = percent / 100
@@ -283,6 +279,9 @@ function value(thing, ctx) {
       //console.log(ctx.mouseX, ctx.mouseY, entity.body.position)
       return entity
 
+    case 'timer':
+      return +new Date()
+      break
 
     case 'randomEmoji':
       return choose(emojiList)
@@ -343,6 +342,7 @@ class Thread {
           frame.index++
           break
         case 'doIf':
+        case 'doIfElse':
           var cond = value(args[0], ctx)
           if (cond) {
             stack.push(new Frame(args[1], ctx))
