@@ -77,8 +77,8 @@ var server = http.createServer(function(request, response) {
   })
 
 })
-server.listen(8080, function() {
-  console.log((new Date()) + ' go to http://localhost:8080/')
+server.listen(8058, function() {
+  console.log((new Date()) + ' go to http://localhost:8058/')
 })
 
 wsServer = new WebSocketServer({

@@ -3,7 +3,7 @@ var output;
 
 class Connection {
   constructor() {
-    this.ws = new WebSocket(`ws://${window.location.host}`);
+    this.ws = new WebSocket(`ws://${window.location.host}/ws`);
     this.ws.onopen = e => this.opened(e)
     this.ws.onclose = e => this.closed(e)
     this.ws.onmessage = this._message.bind(this)
