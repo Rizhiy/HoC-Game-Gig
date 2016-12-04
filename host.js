@@ -2,6 +2,10 @@
 const Matter = require('matter-js/build/matter.js')
 
 const runtime = require('./runtime')
+const emojiList = require('./static/emoji-list.js')
+
+let emojiId = {}
+emojiList.forEach((name, index) => emojiId[name] = index)
 
 
 
@@ -50,16 +54,16 @@ class Entity {
   toJSON() {
     let body = this.body
     let render = body.render
-    return {
-      id: this.id,
-      name: this.name,
-      x: body.position.x + Game.WIDTH/2,
-      y: body.position.y + Game.HEIGHT/2,
-      rot: 180 / Math.PI * body.angle,
-      scale: render.sprite.xScale,
-      opacity: render.opacity,
-      visible: render.visible,
-    }
+    return [
+      this.id,
+      emojiId[this.name],
+      body.position.x + Game.WIDTH/2,
+      body.position.y + Game.HEIGHT/2,
+      180 / Math.PI * body.angle,
+      render.sprite.xScale,
+      render.opacity,
+      //render.visible,
+    ]
   }
 
   distanceTo(other){
@@ -218,9 +222,13 @@ class Game {
     let entities = this.entities
     let out = []
     for (var i=entities.length; i--; ) {
-      out.push(entities[i].toJSON())
+      for (var x of entities[i].toJSON()) {
+        out.push(x)
+      }
     }
-    this.broadcast({ type: 'world', entities: out })
+    let floats = Float32Array.from(out)
+    this.broadcast(floats.buffer)
+    //this.broadcast({ type: 'world', entities: out })
     
     let players = this.players
     out = []

@@ -116,7 +116,11 @@ wsServer.on('request', function(request) {
   game.player(playerId, send)
 
   function send(json) {
-    connection.sendUTF(JSON.stringify(json))
+    if (json instanceof ArrayBuffer) {
+      connection.sendBytes(Buffer.from(json))
+    } else {
+      connection.sendUTF(JSON.stringify(json))
+    }
   }
 
   connection.on('message', function(message) {

@@ -21,8 +21,19 @@ class Connection {
   error() {}
 
   _message(message) {
-    let json = JSON.parse(message.data)
-    this.handlers.forEach(cb => cb(json))
+    if (typeof message.data === 'string') {
+      let json = JSON.parse(message.data)
+      this.handlers.forEach(cb => cb(json))
+    } else {
+      // blob
+      var fileReader = new FileReader()
+      fileReader.onload = () => {
+        var ab = fileReader.result;
+        var floats = new Float32Array(ab)
+        this.handlers.forEach(cb => cb(floats))
+      }
+      fileReader.readAsArrayBuffer(message.data)
+    }
   }
 
   on(cb) {
@@ -196,18 +207,44 @@ function updateWand(eid){
     wand.style.visibility = "visible"
 }
 
+
+function frames(floats) {
+  var keys = [
+    'id',
+    'emojiId',
+    'x',
+    'y',
+    'rot',
+    'scale',
+    'opacity',
+  ]
+  var size = keys.length
+  var length = floats.length
+  var out = []
+  for (var i=0; i < length; i += size) {
+    var obj = {}
+    for (var j=0; j < size; j++) {
+      obj[keys[j]] = floats[i + j]
+    }
+    out.push(obj)
+  }
+  return out
+}
+
 let byId = {}
 let wandcoords = {}
 let wands = {}
-function render(entities) {
-    byId = {}
+function render(floats) {
+  var entities = frames(floats)
+
+  byId = {}
   let msgboxesById = {}
   for (var i=0; i<entities.length; i++) {
     let entity = entities[i]
     if (removed[entity.id]) return
     byId[entity.id] = entity
   }
-  
+
   let msgkeys = Object.keys(messageboxes)
   for(var i=0; i<msgkeys.length; i++){
     let msgbox = messageboxes[msgkeys[i]]
@@ -239,7 +276,7 @@ function render(entities) {
 
 	  image.appendChild(wand);
     }
-    setEmoji(image, entity.name)
+    setEmoji(image, emojiNames[entity.emojiId])
     image.style.transform = `translate(${entity.x}px, ${entity.y}px) scale(${entity.scale}) rotate(${entity.rot}deg)`
     image.style.opacity = entity.opacity
     
@@ -294,14 +331,20 @@ function doRender(){
 var world = document.querySelector(".world")
 var container = document.querySelector('.container')
 var updates = []
+var playerid
 function main(conn, emoji) {
   window.conn = conn
 
   conn.on(json => {
+    if (json instanceof Float32Array) {
+
+      // type 'world'
+      updates.push(json)
+
+      return
+    }
+
     switch (json.type) {
-      case 'world':
-        updates.push(json.entities)
-        break
       case 'player_id':
 		console.log("I AM " + json.id)
         playerid = json.id
