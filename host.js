@@ -200,6 +200,15 @@ class Game {
     this.broadcast({ type: 'remove_entity', id: entityId })
   }
 
+  reset() {
+    this.entities.forEach(entity => {
+      if (!entity.isPlayer) {
+        this.remove(entity.id)
+      } else {
+        entity.threads = []
+      }
+    })
+  }
 
   /* main loop */
 
