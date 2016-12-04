@@ -9,6 +9,7 @@ var Scratch = (function() {
     ["nearest",				                "r", 3, "nearestEntity"],
     ["target",				                "r", 3, "targetEntity"],
     ["spawned",				                "r", 3, "spawned"],
+    ["destroy all",					        " ", 3, "resetAllEntities"],
 
     // ["wait %n secs",						" ", 6, "wait:elapsed:from:",	1],
     ["repeat %n",							"c", 6, "doRepeat", 10],

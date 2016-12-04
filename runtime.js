@@ -22,6 +22,13 @@ function evaluate(thing, ctx) {
     case 'removeEntity':
       ctx.game.remove(ctx.entity.id)
       break
+    case 'resetAllEntities':
+      ctx.game.entities.forEach(entity => {
+        if (!entity.isPlayer) {
+          ctx.game.remove(entity.id)
+        }
+      })
+      break
     case 'setEmoji':
       var [name] = args
       ctx.entity.name = name

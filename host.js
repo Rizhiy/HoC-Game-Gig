@@ -21,6 +21,7 @@ class Player {
 
   place(name, x = 0, y = 0) {
     this.entity = new Entity(name, x, y)
+    this.entity.isPlayer = true
     this.game.add(this.entity)
   }
 
@@ -161,7 +162,7 @@ class Game {
   handle_keydown(id, json) {
     let player = this.players[id]
     let code = player.onKey[json.keyCode]
-    console.log(code)
+    //console.log(code)
     if (code) {
       player.run([code])
     }
@@ -170,7 +171,7 @@ class Game {
   handle_mouseClick(id,json){
     let player = this.players[id]
     let code = player.onClick
-    console.log(code)
+    //console.log(code)
     if (code) {
       player.run([code])
     }
