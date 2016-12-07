@@ -48,6 +48,7 @@ class Entity {
     this.id = this.body.id
 
     this.threads = []
+    this._dead = false
   }
 
   toJSON() {
@@ -192,6 +193,7 @@ class Game {
     let index = this.entities.indexOf(entity)
     if (index === -1) return
     this.entities.splice(index, 1)
+    entity._dead = true
 
     Matter.World.remove(this.engine.world, entity.body)
 

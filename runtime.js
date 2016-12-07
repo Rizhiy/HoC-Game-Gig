@@ -311,6 +311,8 @@ class Thread {
   }
 
   step() {
+    if (ctx.entity && ctx.entity._dead) return false
+
     let stack = this.stack
     while (true) {
       var frame = stack[stack.length - 1]
