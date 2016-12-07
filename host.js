@@ -32,12 +32,10 @@ class Player {
 
   run(code, interactive = false) {
     let player = this
-    runtime.evaluate(code, {
+    runtime.evaluate(code, { // ctx
       player: player,
       entity: player.entity,
       game: this.game,
-      mouseX: player.mouseX,
-      mouseY: player.mouseY
     }, interactive)
   }
 }

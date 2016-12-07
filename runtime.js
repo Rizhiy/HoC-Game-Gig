@@ -265,8 +265,8 @@ function value(thing, ctx) {
     case 'getRestitution': return ctx.entity.body.restitution
     case 'getFriction': return ctx.entity.body.friction
 
-    case "mouseX": return ctx.mouseX
-    case "mouseY": return ctx.mouseY
+    case "mouseX": return ctx.player.mouseX
+    case "mouseY": return ctx.player.mouseY
 
     case 'spawned':
       return ctx.spawned
@@ -278,7 +278,7 @@ function value(thing, ctx) {
       entity = findClosest(ctx.game, ctx.entity, args[0])
       return entity
     case 'targetEntity':
-      entity = findClosestToPoint(ctx.game, ctx.mouseX - 32, ctx.mouseY - 32)
+      entity = findClosestToPoint(ctx.game, ctx.player.mouseX - 32, ctx.mouseY - 32)
       //console.log(ctx.mouseX, ctx.mouseY, entity.body.position)
       return entity
 
